@@ -5,4 +5,4 @@ how to run:
 =============
 - download file
 - cd to main project folder
-- type "npm run" into terminal
+- type "npm start" into terminal
