@@ -1,5 +1,5 @@
-# class-time-map 
-Website to emulate class schedule building, with features for visualizing location and time block of the class; updated in real time.
+# Redesign 
+Another reinterpretation of the student center website for CSULB, focusing on usability and user goals. Created with React.
 
 how to run:
 =============
