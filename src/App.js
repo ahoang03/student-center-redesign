@@ -38,19 +38,17 @@ const schedule = [
 ];
 
 const quickActions = [
-  'View Financial Aid',
   'Search Classes',
-  'Enroll',
   'Degree Planner',
   'My Textbooks',
-  'Make a Payment'
+  'Transcripts',
 ];
 
 const resources = [
-  'Program Advisor (Computer Science)',
-  'Student Health Services',
-  'Campus Housing',
-  'Parking Permit Purchase'
+  { label: 'Program Advisor (Computer Science)', href: '#'},
+  { label: 'Student Health Services', href: '#'},
+  { label: 'Campus Housing', href: '#'},
+  { label: 'Parking Permit Purchase', href: '#'},
 ];
 
 const dayOrder = {
@@ -116,11 +114,19 @@ function App() {
   return (
     <div className="student-center-app">
       <header className="topbar">
-        <button className="icon-button" type="button" aria-label="Open navigation menu">
+        <button
+          className="icon-button"
+          type="button"
+          aria-label="Open navigation menu"
+        >
           <MenuIcon className="topbar-icon" />
         </button>
         <img src={logo} className="csulb-logo" alt="CSULB logo" />
-        <button className="icon-button" type="button" aria-label="Open account menu">
+        <button
+          className="icon-button"
+          type="button"
+          aria-label="Open account menu"
+        >
           <AccountCircleIcon className="topbar-icon" />
         </button>
       </header>
@@ -129,17 +135,11 @@ function App() {
         <section className="hero-card card">
           <p className="eyebrow">Francisco&apos;s Student Center</p>
           <h1>Welcome back, Francisco</h1>
-          <p>Everything important first: your classes, deadlines, finances, and must-do items.</p>
+          <h2>Undergraduate Student in Computer Science</h2>
           <div className="status-row">
-            <span className="status-pill good">
-              <TaskAltIcon fontSize="small" /> No Holds
-            </span>
-            <span className="status-pill good">
-              <AttachMoneyIcon fontSize="small" /> No Outstanding Charges
-            </span>
-            <span className="status-pill warning">
-              <WarningAmberIcon fontSize="small" /> Review Student Fee Information
-            </span>
+            <button className="status-pill warning status-pill-button">
+              <WarningAmberIcon fontSize="small" /> View Important Alerts
+            </button>
           </div>
         </section>
 
@@ -147,23 +147,37 @@ function App() {
           <article className="card classes-priority">
             <div className="card-title-row">
               <SchoolIcon />
-              <h2>Today&apos;s Schedule</h2>
+              <h2>Weekly Schedule</h2>
+              <select
+                className="schedule-term-select"
+                defaultValue="Spring 2026"
+                onChange={(e) => console.log(e.target.value)}
+              >
+                <option>Spring 2026</option>
+                <option>Summer 2026</option>
+                <option>Fall 2026</option>
+              </select>
             </div>
-            <p className="section-subtitle">Classes first, so you can quickly see what is next.</p>
             <div className="schedule-content-box">
-              <p className="focus-hint">Showing your full class schedule for today.</p>
-              <div className="schedule-sort-controls" role="group" aria-label="Sort schedule">
+              <p className="focus-hint">
+                Showing your full class schedule for today.
+              </p>
+              <div
+                className="schedule-sort-controls"
+                role="group"
+                aria-label="Sort schedule"
+              >
                 <button
-                  className={`schedule-sort-button ${scheduleSort === 'date' ? 'is-active' : ''}`}
+                  className={`schedule-sort-button ${scheduleSort === "date" ? "is-active" : ""}`}
                   type="button"
-                  onClick={() => setScheduleSort('date')}
+                  onClick={() => setScheduleSort("date")}
                 >
                   Date/Time Order
                 </button>
                 <button
-                  className={`schedule-sort-button ${scheduleSort === 'name' ? 'is-active' : ''}`}
+                  className={`schedule-sort-button ${scheduleSort === "name" ? "is-active" : ""}`}
                   type="button"
-                  onClick={() => setScheduleSort('name')}
+                  onClick={() => setScheduleSort("name")}
                 >
                   Name Order
                 </button>
@@ -184,6 +198,9 @@ function App() {
             <div>
               <h2>Finances</h2>
               <p className="section-subtitle">Your account and aid summary.</p>
+              <span className="status-pill good">
+                <AttachMoneyIcon fontSize="small" /> No Outstanding Charges
+              </span>
               <div className="metric-row side-metrics">
                 <div>
                   <p className="metric-label">Outstanding Charges</p>
@@ -199,7 +216,48 @@ function App() {
                 </div>
               </div>
               <button className="financial-aid-button" type="button">
-                View Financial Aid Details
+                View Financial Details
+              </button>
+              <button className="financial-aid-button" type="button">
+                Make a Payment
+              </button>
+            </div>
+
+            <div>
+              <h2>Enrollment</h2>
+              <p className="section-subtitle">
+                Your enrollment status and deadlines.
+              </p>
+              <span className="status-pill good">
+                <TaskAltIcon fontSize="small" /> No Holds
+              </span>
+              <div className="metric-row side-metrics">
+                <div style={{textAlign: 'center'}}>
+                  <p className="metric-label">Current Term</p>
+                  <select
+                    className="term-select"
+                    defaultValue="Spring 2026"
+                    onChange={(e) => console.log(e.target.value)}
+                  >
+                    <option>Spring 2026</option>
+                    <option>Summer 2026</option>
+                    <option>Fall 2026</option>
+                  </select>
+                </div>
+                <div>
+                  <p className="metric-label">Enrollment Date</p>
+                  <p className="metric-value">April 1, 2026</p>
+                </div>
+                <div>
+                  <p className="metric-label">Enrollment Deadline</p>
+                  <p className="metric-value">August 15, 2026</p>
+                </div>
+              </div>
+              <button className="financial-aid-button" type="button">
+                View Enrollment Status
+              </button>
+              <button className="financial-aid-button" type="button">
+                Enroll
               </button>
             </div>
 
@@ -208,7 +266,9 @@ function App() {
                 <EventNoteIcon />
                 <h2>Priority Checklist</h2>
               </div>
-              <p className="section-subtitle">What needs attention right now.</p>
+              <p className="section-subtitle">
+                What needs attention right now.
+              </p>
               <ul className="checklist">
                 <li>To Do List: No items</li>
                 <li>Admissions: No pending applications</li>
@@ -249,7 +309,11 @@ function App() {
             <h2>Support & Resources</h2>
             <ul className="resource-list">
               {resources.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item.label}>
+                  <a href={item.href} target="_blank" rel="noopener noreferrer">
+                    {item.label}
+                  </a>
+                </li>
               ))}
             </ul>
           </article>
