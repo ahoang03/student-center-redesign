@@ -8,6 +8,13 @@ import SchoolIcon from '@mui/icons-material/School';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import PersonIcon from '@mui/icons-material/Person';
+import HomeIcon from '@mui/icons-material/Home';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import EditIcon from '@mui/icons-material/Edit';
 
 const schedule = [
   {
@@ -49,6 +56,9 @@ const resources = [
   { label: 'Student Health Services', href: '#'},
   { label: 'Campus Housing', href: '#'},
   { label: 'Parking Permit Purchase', href: '#'},
+  { label: 'Register To Vote', href: '#'},
+  { label: 'CalFresh', href: '#'},
+  { label: 'CSU Freedom of Expression', href: '#'},
 ];
 
 const dayOrder = {
@@ -81,6 +91,17 @@ function getMeetingSortValue(meeting) {
 function App() {
   const [actionQuery, setActionQuery] = useState('');
   const [scheduleSort, setScheduleSort] = useState('date');
+  const [isCalendarView, setIsCalendarView] = useState(false);
+  const [outstandingCharges, setOutstandingCharges] = useState(0);
+  const [enrollmentDate, setEnrollmentDate] = useState(new Date('2026-04-02'));
+  
+  // Personal Information state
+  const [personalInfo, setPersonalInfo] = useState({
+    homeAddress: '1250 Bellflower Blvd, Long Beach, CA 90840',
+    mailingAddress: '1250 Bellflower Blvd, Long Beach, CA 90840',
+    preferredPhone: '(562) 985-4111',
+    preferredEmail: 'first.last@student.csulb.edu'
+  });
 
   const visibleSchedule = useMemo(() => {
     const scheduleCopy = [...schedule];
@@ -110,6 +131,17 @@ function App() {
 
     return quickActions.filter((action) => action.toLowerCase().includes(normalizedQuery));
   }, [actionQuery]);
+
+  // Check if current date is before enrollment date
+  const currentDate = new Date();
+  const isBeforeEnrollmentDate = currentDate < enrollmentDate;
+  
+  // Format enrollment date for display
+  const formattedEnrollmentDate = enrollmentDate.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
 
   return (
     <div className="student-center-app">
@@ -157,40 +189,125 @@ function App() {
                 <option>Summer 2026</option>
                 <option>Fall 2026</option>
               </select>
+              <button
+                className="view-toggle-button"
+                onClick={() => setIsCalendarView(!isCalendarView)}
+                aria-label={isCalendarView ? "Switch to list view" : "Switch to calendar view"}
+                title={isCalendarView ? "Switch to list view" : "Switch to calendar view"}
+              >
+                {isCalendarView ? <ViewListIcon /> : <CalendarMonthIcon />}
+              </button>
             </div>
             <div className="schedule-content-box">
-              <p className="focus-hint">
-                Showing your full class schedule for today.
-              </p>
-              <div
-                className="schedule-sort-controls"
-                role="group"
-                aria-label="Sort schedule"
-              >
-                <button
-                  className={`schedule-sort-button ${scheduleSort === "date" ? "is-active" : ""}`}
-                  type="button"
-                  onClick={() => setScheduleSort("date")}
-                >
-                  Date/Time Order
-                </button>
-                <button
-                  className={`schedule-sort-button ${scheduleSort === "name" ? "is-active" : ""}`}
-                  type="button"
-                  onClick={() => setScheduleSort("name")}
-                >
-                  Name Order
-                </button>
-              </div>
-              <ul className="schedule-list">
-                {visibleSchedule.map((item) => (
-                  <li key={item.course}>
-                    <h3>{item.course}</h3>
-                    <p>{item.meeting}</p>
-                    <span>{item.room}</span>
-                  </li>
-                ))}
-              </ul>
+              {!isCalendarView ? (
+                <>
+                  <p className="focus-hint">
+                    Showing your full class schedule for today.
+                  </p>
+                  <div
+                    className="schedule-sort-controls"
+                    role="group"
+                    aria-label="Sort schedule"
+                  >
+                    <label>Order by: </label>
+                    <select
+                      value={scheduleSort}
+                      className="schedule-sort-dropdown"
+                      onChange={(e) => setScheduleSort(e.target.value)}
+                    >
+                      <option value="date">Date/Time</option>
+                      <option value="name">Name</option>
+                    </select>
+                  </div>
+                  <ul className="schedule-list">
+                    {visibleSchedule.map((item) => (
+                      <li key={item.course}>
+                        <h3>{item.course}</h3>
+                        <p>{item.meeting}</p>
+                        <span>{item.room}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <div className="calendar-view">
+                  <div className="calendar-header">
+                    <div className="time-column-header">Time</div>
+                    <div className="day-header">Monday</div>
+                    <div className="day-header">Tuesday</div>
+                    <div className="day-header">Wednesday</div>
+                    <div className="day-header">Thursday</div>
+                    <div className="day-header">Friday</div>
+                  </div>
+                  <div className="calendar-grid">
+                    {['11:00 AM', '12:30 PM', '2:00 PM', '3:30 PM'].map((time) => (
+                      <div key={time} className="calendar-row">
+                        <div className="time-slot">{time}</div>
+                        <div className="day-cell">
+                          {schedule.find(c => c.meeting.includes('Mo') && c.meeting.includes(time)) && (
+                            <div className="class-block">
+                              <div className="class-title">
+                                {schedule.find(c => c.meeting.includes('Mo') && c.meeting.includes(time)).course}
+                              </div>
+                              <div className="class-room">
+                                {schedule.find(c => c.meeting.includes('Mo') && c.meeting.includes(time)).room}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="day-cell">
+                          {schedule.find(c => c.meeting.includes('Tu') && c.meeting.includes(time)) && (
+                            <div className="class-block">
+                              <div className="class-title">
+                                {schedule.find(c => c.meeting.includes('Tu') && c.meeting.includes(time)).course}
+                              </div>
+                              <div className="class-room">
+                                {schedule.find(c => c.meeting.includes('Tu') && c.meeting.includes(time)).room}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="day-cell">
+                          {schedule.find(c => c.meeting.includes('We') && c.meeting.includes(time)) && (
+                            <div className="class-block">
+                              <div className="class-title">
+                                {schedule.find(c => c.meeting.includes('We') && c.meeting.includes(time)).course}
+                              </div>
+                              <div className="class-room">
+                                {schedule.find(c => c.meeting.includes('We') && c.meeting.includes(time)).room}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="day-cell">
+                          {schedule.find(c => c.meeting.includes('Th') && c.meeting.includes(time)) && (
+                            <div className="class-block">
+                              <div className="class-title">
+                                {schedule.find(c => c.meeting.includes('Th') && c.meeting.includes(time)).course}
+                              </div>
+                              <div className="class-room">
+                                {schedule.find(c => c.meeting.includes('Th') && c.meeting.includes(time)).room}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="day-cell">
+                          {schedule.find(c => c.meeting.includes('Fr') && c.meeting.includes(time)) && (
+                            <div className="class-block">
+                              <div className="class-title">
+                                {schedule.find(c => c.meeting.includes('Fr') && c.meeting.includes(time)).course}
+                              </div>
+                              <div className="class-room">
+                                {schedule.find(c => c.meeting.includes('Fr') && c.meeting.includes(time)).room}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </article>
 
@@ -204,7 +321,7 @@ function App() {
               <div className="metric-row side-metrics">
                 <div>
                   <p className="metric-label">Outstanding Charges</p>
-                  <p className="metric-value">$0.00</p>
+                  <p className="metric-value">${outstandingCharges.toFixed(2)}</p>
                 </div>
                 <div>
                   <p className="metric-label">Financial Aid Estimate</p>
@@ -218,7 +335,12 @@ function App() {
               <button className="financial-aid-button" type="button">
                 View Financial Details
               </button>
-              <button className="financial-aid-button" type="button">
+              <button 
+                className="financial-aid-button" 
+                type="button"
+                disabled={outstandingCharges === 0}
+                style={outstandingCharges === 0 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+              >
                 Make a Payment
               </button>
             </div>
@@ -246,7 +368,7 @@ function App() {
                 </div>
                 <div>
                   <p className="metric-label">Enrollment Date</p>
-                  <p className="metric-value">April 1, 2026</p>
+                  <p className="metric-value">{formattedEnrollmentDate}</p>
                 </div>
                 <div>
                   <p className="metric-label">Enrollment Deadline</p>
@@ -256,7 +378,12 @@ function App() {
               <button className="financial-aid-button" type="button">
                 View Enrollment Status
               </button>
-              <button className="financial-aid-button" type="button">
+              <button 
+                className="financial-aid-button" 
+                type="button"
+                disabled={isBeforeEnrollmentDate}
+                style={isBeforeEnrollmentDate ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+              >
                 Enroll
               </button>
             </div>
@@ -280,29 +407,83 @@ function App() {
         </section>
 
         <section className="grid-two">
-          <article className="card quick-actions-priority">
-            <h2>Quick Actions</h2>
-            <label className="search-label" htmlFor="quick-actions-search">
-              Find an action quickly
-            </label>
-            <input
-              id="quick-actions-search"
-              className="action-search"
-              type="search"
-              value={actionQuery}
-              onChange={(event) => setActionQuery(event.target.value)}
-              placeholder="Search actions..."
-            />
-            <div className="actions-grid">
-              {filteredQuickActions.map((action) => (
-                <button key={action} className="action-button" type="button">
-                  {action}
-                </button>
-              ))}
+          <article className="card personal-info-card">
+            <div className="card-title-row">
+              <PersonIcon />
+              <h2>Personal Information</h2>
             </div>
-            {filteredQuickActions.length === 0 ? (
-              <p className="focus-hint">No matches. Try a broader keyword.</p>
-            ) : null}
+            
+            <div className="personal-info-content">
+              <div className="info-display-section">
+                <h3 className="info-section-title">Contact Information</h3>
+                
+                <div className="info-item">
+                  <div className="info-icon">
+                    <HomeIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Home Address</p>
+                    <p className="info-value">{personalInfo.homeAddress}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <HomeIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Mailing Address</p>
+                    <p className="info-value">{personalInfo.mailingAddress}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <PhoneIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Preferred Phone</p>
+                    <p className="info-value">{personalInfo.preferredPhone}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <EmailIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Preferred Email</p>
+                    <p className="info-value">{personalInfo.preferredEmail}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="info-actions-section">
+                <h3 className="info-section-title">Update Your Information</h3>
+                <div className="info-actions-grid">
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>Demographic Data</span>
+                  </button>
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>Emergency Contact</span>
+                  </button>
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>Names</span>
+                  </button>
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>User Preference</span>
+                  </button>
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>Privacy Settings</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </article>
 
           <article className="card resources-priority">
@@ -318,6 +499,32 @@ function App() {
             </ul>
           </article>
         </section>
+
+        <article className="card quick-actions-priority">
+          <h2>Quick Actions</h2>
+          <label className="search-label" htmlFor="quick-actions-search">
+            Find an action quickly
+          </label>
+          <input
+            id="quick-actions-search"
+            className="action-search"
+            type="search"
+            value={actionQuery}
+            onChange={(event) => setActionQuery(event.target.value)}
+            placeholder="Search actions..."
+          />
+          <div className="actions-grid">
+            {filteredQuickActions.map((action) => (
+              <button key={action} className="action-button" type="button">
+                {action}
+              </button>
+            ))}
+          </div>
+          {filteredQuickActions.length === 0 ? (
+            <p className="focus-hint">No matches. Try a broader keyword.</p>
+          ) : null}
+        </article>
+        
       </main>
     </div>
   );
