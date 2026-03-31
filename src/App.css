@@ -574,39 +574,118 @@ h3 {
   color: #0b4e9f;
 }
 
-.personal-info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem;
-}
-
-.personal-info-field {
-  display: grid;
-  gap: 0.3rem;
-}
-
-.personal-info-field span {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--muted);
-  font-weight: 700;
-}
-
-.personal-info-field input {
+/* Personal Information Section */
+.personal-info-card {
   width: 100%;
-  border: 1px solid #d8d2c1;
-  border-radius: 10px;
-  padding: 0.56rem 0.62rem;
-  font: inherit;
-  color: var(--ink);
-  background: #ffffff;
 }
 
-.personal-info-field input:focus {
-  outline: 2px solid #1c7ed6;
-  outline-offset: 1px;
-  border-color: #1c7ed6;
+.personal-info-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.info-display-section,
+.info-actions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--line);
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--paper);
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  transition: box-shadow 0.2s ease;
+}
+
+.info-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.info-icon {
+  color: var(--csulb-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff4d2;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.info-details {
+  flex: 1;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 0.25rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.info-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.info-action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f7f3 100%);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: left;
+}
+
+.info-action-button:hover {
+  background: linear-gradient(135deg, #fff4d2 0%, #ffeaa7 100%);
+  border-color: var(--csulb-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 179, 35, 0.2);
+}
+
+.info-action-button:active {
+  transform: translateY(0);
+}
+
+.info-action-button svg {
+  color: var(--csulb-gold);
+}
+
+.info-action-button span {
+  flex: 1;
 }
 
 .planner-grid {
@@ -689,6 +768,13 @@ h3 {
   outline-offset: 1px;
 }
 
+@media (max-width: 1024px) {
+  .personal-info-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
 @media (max-width: 900px) {
   .grid-main-side,
   .grid-two {
@@ -715,6 +801,16 @@ h3 {
   }
 }
 
+@media (max-width: 768px) {
+  .personal-info-content {
+    grid-template-columns: 1fr;
+  }
+
+  .info-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 600px) {
   .dashboard {
     width: calc(100vw - 0.8rem);
@@ -722,8 +818,7 @@ h3 {
   }
 
   .actions-grid,
-  .metric-row,
-  .personal-info-grid {
+  .metric-row {
     grid-template-columns: 1fr;
   }
 

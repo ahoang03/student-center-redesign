@@ -8,7 +8,6 @@ import SchoolIcon from '@mui/icons-material/School';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import BoltIcon from '@mui/icons-material/Bolt';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -21,6 +20,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import PersonIcon from '@mui/icons-material/Person';
+import HomeIcon from '@mui/icons-material/Home';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import EditIcon from '@mui/icons-material/Edit';
 
 const schedule = [
   {
@@ -144,6 +148,7 @@ function App() {
     room: '',
     units: '3',
   });
+  // eslint-disable-next-line no-unused-vars
   const [personalInfo, setPersonalInfo] = useState(() => {
     try {
       const saved = window.localStorage.getItem(PERSONAL_INFO_STORAGE_KEY);
@@ -232,13 +237,6 @@ function App() {
       );
     });
   }, [plannerClasses, plannerQuery]);
-
-  function handlePersonalInfoChange(field, value) {
-    setPersonalInfo((current) => ({
-      ...current,
-      [field]: value,
-    }));
-  }
 
   function showNotice(type, message) {
     setNotice({ type, message });
@@ -631,102 +629,81 @@ function App() {
             <section className="grid-two">
               <article className="card personal-info-priority">
                 <div className="card-title-row">
-                  <ManageAccountsIcon />
+                  <PersonIcon />
                   <h2>Personal Information</h2>
                 </div>
-                <p className="section-subtitle">Keep your profile details up to date. Changes apply as you type.</p>
-
-                <div className="personal-info-grid">
-                  <label className="personal-info-field" htmlFor="names">
-                    <span>Names</span>
-                    <input
-                      id="names"
-                      type="text"
-                      value={personalInfo.names}
-                      onChange={(event) => handlePersonalInfoChange('names', event.target.value)}
-                    />
-                  </label>
-
-                  <label className="personal-info-field" htmlFor="home-address">
-                    <span>Home Address</span>
-                    <input
-                      id="home-address"
-                      type="text"
-                      value={personalInfo.homeAddress}
-                      onChange={(event) => handlePersonalInfoChange('homeAddress', event.target.value)}
-                    />
-                  </label>
-
-                  <label className="personal-info-field" htmlFor="mailing-address">
-                    <span>Mailing Address</span>
-                    <input
-                      id="mailing-address"
-                      type="text"
-                      value={personalInfo.mailingAddress}
-                      onChange={(event) => handlePersonalInfoChange('mailingAddress', event.target.value)}
-                    />
-                  </label>
-
-                  <label className="personal-info-field" htmlFor="preferred-phone">
-                    <span>Preferred Phone</span>
-                    <input
-                      id="preferred-phone"
-                      type="tel"
-                      value={personalInfo.preferredPhone}
-                      onChange={(event) => handlePersonalInfoChange('preferredPhone', event.target.value)}
-                    />
-                  </label>
-
-                  <label className="personal-info-field" htmlFor="preferred-email">
-                    <span>Preferred Email</span>
-                    <input
-                      id="preferred-email"
-                      type="email"
-                      value={personalInfo.preferredEmail}
-                      onChange={(event) => handlePersonalInfoChange('preferredEmail', event.target.value)}
-                    />
-                  </label>
-
-                  <label className="personal-info-field" htmlFor="demographic-data">
-                    <span>Demographic Data</span>
-                    <input
-                      id="demographic-data"
-                      type="text"
-                      value={personalInfo.demographicData}
-                      onChange={(event) => handlePersonalInfoChange('demographicData', event.target.value)}
-                    />
-                  </label>
-
-                  <label className="personal-info-field" htmlFor="emergency-contact">
-                    <span>Emergency Contact</span>
-                    <input
-                      id="emergency-contact"
-                      type="text"
-                      value={personalInfo.emergencyContact}
-                      onChange={(event) => handlePersonalInfoChange('emergencyContact', event.target.value)}
-                    />
-                  </label>
-
-                  <label className="personal-info-field" htmlFor="user-preference">
-                    <span>User Preference</span>
-                    <input
-                      id="user-preference"
-                      type="text"
-                      value={personalInfo.userPreference}
-                      onChange={(event) => handlePersonalInfoChange('userPreference', event.target.value)}
-                    />
-                  </label>
-
-                  <label className="personal-info-field" htmlFor="privacy-settings">
-                    <span>Privacy Settings</span>
-                    <input
-                      id="privacy-settings"
-                      type="text"
-                      value={personalInfo.privacySettings}
-                      onChange={(event) => handlePersonalInfoChange('privacySettings', event.target.value)}
-                    />
-                  </label>
+            
+            <div className="personal-info-content">
+              <div className="info-display-section">
+                <h3 className="info-section-title">Contact Information</h3>
+                
+                <div className="info-item">
+                  <div className="info-icon">
+                    <HomeIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Home Address</p>
+                    <p className="info-value">{personalInfo.homeAddress}</p>
+                  </div>
                 </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <HomeIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Mailing Address</p>
+                    <p className="info-value">{personalInfo.mailingAddress}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <PhoneIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Preferred Phone</p>
+                    <p className="info-value">{personalInfo.preferredPhone}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <EmailIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Preferred Email</p>
+                    <p className="info-value">{personalInfo.preferredEmail}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="info-actions-section">
+                <h3 className="info-section-title">Update Your Information</h3>
+                <div className="info-actions-grid">
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>Demographic Data</span>
+                  </button>
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>Emergency Contact</span>
+                  </button>
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>Names</span>
+                  </button>
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>User Preference</span>
+                  </button>
+                  <button className="info-action-button" type="button">
+                    <EditIcon fontSize="small" />
+                    <span>Privacy Settings</span>
+                  </button>
+                </div>
+              </div>
+            </div>
               </article>
             </section>
           </>
