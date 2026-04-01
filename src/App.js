@@ -915,9 +915,7 @@ function App() {
                 <button
                   className="financial-aid-button"
                   type="button"
-                  onClick={() =>
-                    showNotice('success', 'CSULB Notice: Financial aid selections saved.')
-                  }
+                  onClick={() => handleAcceptLoans()}
                 >
                   Submit Changes
                 </button>
