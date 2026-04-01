@@ -25,6 +25,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import EditIcon from '@mui/icons-material/Edit';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const schedule = [
   {
@@ -136,6 +137,8 @@ function getMeetingSortValue(meeting) {
 function App() {
   const [page, setPage] = useState('dashboard');
   const [actionQuery, setActionQuery] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [scheduleSort, setScheduleSort] = useState('date');
   const [scheduleDayFilter, setScheduleDayFilter] = useState('all');
   const [plannerQuery, setPlannerQuery] = useState('');
@@ -166,6 +169,13 @@ function App() {
   const canMakePayment = outstandingCharges > 0;
   const canEnroll = today >= enrollmentDate && today <= enrollmentEndDate;
   const canSubmitEnrollment = canEnroll && enrollmentCart.length > 0;
+
+  const [aidSelections, setAidSelections] = useState({
+    pell: 'accept',
+    calGrant: 'accept',
+    loanA: 'decline',
+    loanB: 'decline',
+  });
 
   const visibleSchedule = useMemo(() => {
     const filteredSchedule = schedule.filter((item) => {
@@ -237,6 +247,23 @@ function App() {
       );
     });
   }, [plannerClasses, plannerQuery]);
+
+  function closeSidebar() {
+    setIsClosing(true);
+
+    setTimeout(() => {
+      setSidebarOpen(false);
+      setIsClosing(false);
+    }, 250); // match animation duration
+  }
+
+  function handleAidChange(key, value) {
+    setAidSelections((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  }
+
 
   function showNotice(type, message) {
     setNotice({ type, message });
@@ -353,7 +380,10 @@ function App() {
   return (
     <div className="student-center-app">
       <header className="topbar">
-        <button className="icon-button" type="button" aria-label="Open navigation menu">
+        <button className="icon-button" type="button" aria-label="Open navigation menu" onClick={() => {
+  setSidebarOpen(true);
+  setIsClosing(false);
+}}>
           <MenuIcon className="topbar-icon" />
         </button>
         <img src={logo} className="csulb-logo" alt="CSULB logo" />
@@ -361,6 +391,45 @@ function App() {
           <AccountCircleIcon className="topbar-icon" />
         </button>
       </header>
+
+      {(sidebarOpen || isClosing) && (
+        <div className="sidebar-overlay" onClick={closeSidebar}>
+          <aside
+            className={`sidebar ${isClosing ? 'closing' : ''}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sidebar-header">
+              <h2>Navigation</h2>
+              <button className="icon-button sidebar-close" onClick={closeSidebar}>
+                <CloseIcon sx={{ color: 'black' }}/>
+              </button>
+            </div>
+
+            <nav className="sidebar-nav">
+              <button
+                className={`sidebar-link ${page === 'dashboard' ? 'active' : ''}`}
+                onClick={() => { setPage('dashboard'); setSidebarOpen(false); }}
+              >
+                <DashboardIcon fontSize="small" /> Dashboard <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+              </button>
+
+              <button
+                className={`sidebar-link ${page === 'planner' ? 'active' : ''}`}
+                onClick={() => { setPage('planner'); setSidebarOpen(false); }}
+              >
+                <SchoolIcon fontSize="small" /> Class Planner <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+              </button>
+
+              <button
+                className={`sidebar-link ${page === 'financialAid' ? 'active' : ''}`}
+                onClick={() => { setPage('financialAid'); setSidebarOpen(false); }}
+              >
+                <AttachMoneyIcon fontSize="small" />Financial Aid <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+              </button>
+            </nav>
+          </aside>
+        </div>
+      )}
 
       <main className="dashboard">
         {notice ? (
@@ -506,8 +575,8 @@ function App() {
                   >
                     E-Refund Sign Up
                   </a>
-                  <button className="financial-aid-button" type="button" onClick={handleAcceptLoans}>
-                    Accept Loans <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                  <button className="financial-aid-button" type="button" onClick={() => setPage('financialAid')}>
+                    Accept/Decline Award Package <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                   </button>
                   <button className="financial-aid-button" type="button" onClick={handleMakePayment} disabled={!canMakePayment}>
                     Make a Payment <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
@@ -705,6 +774,162 @@ function App() {
               </div>
             </div>
               </article>
+            </section>
+          </>
+        ) : page === 'financialAid' ? (
+          <>
+            <section className="hero-card card">
+              <p className="eyebrow">Financial Aid</p>
+              <h1>Accept / Decline Financial Aid</h1>
+              <h2>Review and manage your 2025–2026 award package</h2>
+
+              <div className="status-row">
+                <button
+                  className="status-pill warning status-pill-button"
+                  type="button"
+                  onClick={() => setPage('dashboard')}
+                >
+                  <ArrowBackIcon fontSize="small" /> Back to Dashboard
+                </button>
+              </div>
+            </section>
+
+            <section className="card">
+              <div className="card-title-row">
+                <AttachMoneyIcon />
+                <h2>Award Package</h2>
+              </div>
+
+              <p className="section-subtitle">
+                Select which awards you would like to accept or decline.
+              </p>
+
+              <table className="aid-table">
+                <thead>
+                  <tr>
+                    <th>Award</th>
+                    <th>Category</th>
+                    <th>Offered</th>
+                    <th>Accepted</th>
+                    <th>Accept</th>
+                    <th>Decline</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Federal Pell Grant</td>
+                    <td>Grant</td>
+                    <td>$3000.00</td>
+                    <td>$3000.00</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={aidSelections.pell === 'accept'}
+                        onChange={() => handleAidChange('pell', 'accept')}
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={aidSelections.pell === 'decline'}
+                        onChange={() => handleAidChange('pell', 'decline')}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Cal Grant A</td>
+                    <td>Grant</td>
+                    <td>$1850.00</td>
+                    <td>$1850.00</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={aidSelections.calGrant === 'accept'}
+                        onChange={() => handleAidChange('calGrant', 'accept')}
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={aidSelections.calGrant === 'decline'}
+                        onChange={() => handleAidChange('calGrant', 'decline')}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Direct Subsidized Loan</td>
+                    <td>Loan</td>
+                    <td>$0.00</td>
+                    <td>$0.00</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={aidSelections.loanA === 'accept'}
+                        onChange={() => handleAidChange('loanA', 'accept')}
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={aidSelections.loanA === 'decline'}
+                        onChange={() => handleAidChange('loanA', 'decline')}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Direct Unsubsidized Loan</td>
+                    <td>Loan</td>
+                    <td>$0.00</td>
+                    <td>$0.00</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={aidSelections.loanB === 'accept'}
+                        onChange={() => handleAidChange('loanB', 'accept')}
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={aidSelections.loanB === 'decline'}
+                        onChange={() => handleAidChange('loanB', 'decline')}
+                      />
+                    </td>
+                  </tr>
+                  <tr className="total-aid">
+                      <td>Total:</td>
+                      <td></td>
+                      <td>$4850.00</td>
+                      <td>$4850.00</td>
+                      <td></td>
+                      <td></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+                <button
+                  className="financial-aid-button"
+                  type="button"
+                  onClick={() =>
+                    showNotice('success', 'CSULB Notice: Financial aid selections saved.')
+                  }
+                >
+                  Submit Changes
+                </button>
+
+                <button
+                  className="action-button"
+                  type="button"
+                  onClick={() => setPage('dashboard')}
+                >
+                  Cancel
+                </button>
+              </div>
             </section>
           </>
         ) : (

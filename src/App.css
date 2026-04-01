@@ -56,6 +56,99 @@
   width: auto;
 }
 
+/* Menu side-bar */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.sidebar {
+  width: 280px;
+  height: 100%;
+  background: #ffffff;
+  padding: 1.25rem;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.12);
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  animation: slideIn 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.25s ease forwards;
+}
+
+.sidebar.closing {
+  animation: slideOut 0.25s ease forwards;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar-header h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.sidebar-link {
+  padding: 12px 14px;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  border: none;
+  border-radius: 10px;
+  background: #f5f7fa;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background: #e9eef5;
+  transform: translateX(3px);
+}
+
+.sidebar-link.active {
+  background: var(--csulb-gold);
+  color: var(--csulb-black);
+  font-weight: 600;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
 .dashboard {
   width: calc(100vw - 2rem);
   max-width: 1600px;
@@ -686,6 +779,32 @@ h3 {
 
 .info-action-button span {
   flex: 1;
+}
+
+.aid-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.aid-table th,
+.aid-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.aid-table th {
+  background-color: #f4f4f4;
+}
+
+.aid-table td:nth-child(5),
+.aid-table td:nth-child(6) {
+  text-align: center;
+}
+
+.total-aid td {
+  font-weight: 700;
 }
 
 .planner-grid {
