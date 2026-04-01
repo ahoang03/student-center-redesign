@@ -989,47 +989,47 @@ function App() {
                 <p className="section-subtitle">Create a custom class option before adding it to your cart.</p>
                 <div className="planner-form-grid">
                   <label className="personal-info-field" htmlFor="new-class-code">
-                    <span>Course Code</span>
+                    <span>Course Code: </span>
                     <input
                       id="new-class-code"
                       type="text"
                       value={newClassForm.code}
                       onChange={(event) => handleNewClassFormChange('code', event.target.value)}
-                      placeholder="CECS 499-01"
+                      placeholder="e.g. CECS 499-01"
                     />
                   </label>
                   <label className="personal-info-field" htmlFor="new-class-title">
-                    <span>Course Title</span>
+                    <span>Course Title: </span>
                     <input
                       id="new-class-title"
                       type="text"
                       value={newClassForm.title}
                       onChange={(event) => handleNewClassFormChange('title', event.target.value)}
-                      placeholder="Special Topics"
+                      placeholder="e.g. Special Topics"
                     />
                   </label>
                   <label className="personal-info-field" htmlFor="new-class-meeting">
-                    <span>Meeting Time</span>
+                    <span>Meeting Time: </span>
                     <input
                       id="new-class-meeting"
                       type="text"
                       value={newClassForm.meeting}
                       onChange={(event) => handleNewClassFormChange('meeting', event.target.value)}
-                      placeholder="TuTh 5:00 PM - 6:15 PM"
+                      placeholder="e.g. TuTh 5:00 PM - 6:15 PM"
                     />
                   </label>
                   <label className="personal-info-field" htmlFor="new-class-room">
-                    <span>Room</span>
+                    <span>Room: </span>
                     <input
                       id="new-class-room"
                       type="text"
                       value={newClassForm.room}
                       onChange={(event) => handleNewClassFormChange('room', event.target.value)}
-                      placeholder="ECS Room 211"
+                      placeholder="e.g. ECS Room 211"
                     />
                   </label>
                   <label className="personal-info-field" htmlFor="new-class-units">
-                    <span>Units</span>
+                    <span>Units: </span>
                     <input
                       id="new-class-units"
                       type="number"
