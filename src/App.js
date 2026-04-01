@@ -543,7 +543,7 @@ function App() {
               <article className="card stack finance-priority">
                 <div>
                   <div className="card-title-row">
-                    <AttachMoneyIcon />
+                    <AttachMoneyIcon className="finances-icon"/>
                     <h2>Finances</h2>
                   </div>
                   <p className="section-subtitle">Your account and aid summary.</p>
