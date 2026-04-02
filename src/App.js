@@ -813,6 +813,7 @@ function App() {
                     <th>Accepted</th>
                     <th>Accept</th>
                     <th>Decline</th>
+                    <th>Scheduled Disbursement Date</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -828,7 +829,6 @@ function App() {
                         onChange={() => handleAidChange('pell', 'accept')}
                       />
                     </td>
-
                     <td>
                       <input
                         type="checkbox"
@@ -836,6 +836,7 @@ function App() {
                         onChange={() => handleAidChange('pell', 'decline')}
                       />
                     </td>
+                    <td>4/1/26</td>
                   </tr>
                   <tr>
                     <td>Cal Grant A</td>
@@ -849,7 +850,6 @@ function App() {
                         onChange={() => handleAidChange('calGrant', 'accept')}
                       />
                     </td>
-
                     <td>
                       <input
                         type="checkbox"
@@ -857,6 +857,7 @@ function App() {
                         onChange={() => handleAidChange('calGrant', 'decline')}
                       />
                     </td>
+                    <td>4/1/26</td>
                   </tr>
                   <tr>
                     <td>Direct Subsidized Loan</td>
@@ -870,7 +871,6 @@ function App() {
                         onChange={() => handleAidChange('loanA', 'accept')}
                       />
                     </td>
-
                     <td>
                       <input
                         type="checkbox"
@@ -878,6 +878,7 @@ function App() {
                         onChange={() => handleAidChange('loanA', 'decline')}
                       />
                     </td>
+                    <td></td>
                   </tr>
                   <tr>
                     <td>Direct Unsubsidized Loan</td>
@@ -891,7 +892,6 @@ function App() {
                         onChange={() => handleAidChange('loanB', 'accept')}
                       />
                     </td>
-
                     <td>
                       <input
                         type="checkbox"
@@ -899,6 +899,7 @@ function App() {
                         onChange={() => handleAidChange('loanB', 'decline')}
                       />
                     </td>
+                    <td></td>
                   </tr>
                   <tr className="total-aid">
                       <td>Total:</td>
@@ -907,13 +908,14 @@ function App() {
                       <td>$4850.00</td>
                       <td></td>
                       <td></td>
+                      <td></td>
                   </tr>
                 </tbody>
               </table>
 
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+              <div className="financial-aid-btn-container" style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
                 <button
-                  className="financial-aid-button"
+                  className="financial-aid-submit-btn"
                   type="button"
                   onClick={() => handleAcceptLoans()}
                 >
@@ -921,11 +923,11 @@ function App() {
                 </button>
 
                 <button
-                  className="action-button"
+                  className="financial-aid-cancel-btn"
                   type="button"
                   onClick={() => setPage('dashboard')}
                 >
-                  Cancel
+                  Back
                 </button>
               </div>
             </section>
