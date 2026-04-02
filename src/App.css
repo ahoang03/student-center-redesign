@@ -490,6 +490,94 @@ h3 {
   font-size: 0.9rem;
 }
 
+.tabs {
+  margin-left: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tab-button {
+  border: none;
+  background: #f1f3f6;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+  background: #e2e6ec;
+}
+
+.tab-button.active {
+  background: var(--csulb-gold);
+  color: var(--csulb-black);
+  font-weight: 600;
+}
+
+.grades-table {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.grades-table thead {
+  background-color: #ddd;
+}
+
+.grades-table th,
+.grades-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.grades-table th:last-child,
+.grades-table td:last-child {
+  border-right: none;
+}
+
+.gpa-row td {
+  font-weight: 700;
+  border-top: 2px solid #aaa;
+  background: #f8fafc;
+}
+
+.cumulative td {
+  background: #f8fafc;
+}
+
+.exam-table {
+  width: 100%;
+  background-color: white;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.exam-table thead {
+  background-color: #ddd;
+}
+
+.exam-table th,
+.exam-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.exam-table th:last-child,
+.exam-table td:last-child {
+  border-right: none;
+}
+
+.calendar-day small {
+  display: block;
+  font-size: 0.75rem;
+  color: #666;
+}
+
 .stack {
   display: grid;
   gap: 1.1rem;

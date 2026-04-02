@@ -82,6 +82,44 @@ const initialPlannerClasses = [
   },
 ];
 
+const examSchedule = [
+  {
+    course: 'CECS 448-01',
+    date: 'May 14, 2026',
+    day: 'Th',
+    time: '10:15 AM - 12:15 PM',
+    location: 'ECS Room 308',
+  },
+  {
+    course: 'CECS 427-01',
+    date: 'May 12, 2026',
+    day: 'Tu',
+    time: '12:30 PM - 2:30 PM',
+    location: 'VEC Room 518',
+  },
+  {
+    course: 'CECS 491B-08',
+    date: 'May 14, 2026',
+    day: 'Th',
+    time: '12:30 PM - 2:30 PM',
+    location: 'ECS Room 413',
+  },
+  {
+    course: 'CECS 327-01',
+    date: 'May 14, 2026',
+    day: 'Th',
+    time: '2:45 PM - 4:45 PM',
+    location: 'ECS Room 105',
+  },
+  {
+    course: 'CECS 470-01',
+    date: 'May 12 2026',
+    day: 'Tu',
+    time: '2:45 PM - 4:45 PM',
+    location: 'ECS Room 405',
+  },
+];
+
 const quickActions = ['Search Classes', 'Degree Planner', 'My Textbooks', 'Transcripts'];
 
 const resources = [
@@ -117,6 +155,56 @@ const dayOrder = {
   Su: 7,
 };
 
+const gradePoints = {
+  'A': 4.0,
+  'A-': 3.7,
+  'B+': 3.3,
+  'B': 3.0,
+  'B-': 2.7,
+  'C+': 2.3,
+  'C': 2.0,
+  'C-': 1.7,
+  'D': 1.0,
+  'F': 0.0,
+};
+
+const gradesData = [
+  { course: 'CECS 448-01', grade: 'A', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 427-01', grade: 'A-', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 491B-08', grade: 'B+', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 327-01', grade: 'A', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 470-01', grade: 'A', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 343', grade: 'B', units: 3, term: 'Fall 2025' },
+  { course: 'CECS 326', grade: 'A-', units: 3, term: 'Fall 2025' },
+];
+
+const classesData = [
+  { course: 'CECS 448-01', grade: 'A', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 427-01', grade: 'A-', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 491B-08', grade: 'B+', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 327-01', grade: 'A', units: 3, term: 'Spring 2026' },
+  { course: 'CECS 470-01', grade: 'A', units: 3, term: 'Spring 2026' },
+];
+
+function calculateGPA(data) {
+  const totalUnits = data.reduce((sum, c) => sum + c.units, 0);
+
+  if (totalUnits === 0) return 0;
+
+  const totalPoints = data.reduce((sum, c) => {
+    return sum + (gradePoints[c.grade] || 0) * c.units;
+  }, 0);
+
+  return (totalPoints / totalUnits).toFixed(2);
+}
+
+const currentTerm = 'Spring 2026';
+
+const termClasses = gradesData.filter(c => c.term === currentTerm);
+
+const termGPA = calculateGPA(termClasses);
+const cumulativeGPA = calculateGPA(gradesData);
+
 function getMeetingSortValue(meeting) {
   const meetingMatch = meeting.match(/([A-Za-z]+)\s+(\d{1,2}):(\d{2})\s+(AM|PM)/);
 
@@ -139,6 +227,7 @@ function App() {
   const [actionQuery, setActionQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [scheduleTab, setScheduleTab] = useState('schedule');
   const [scheduleSort, setScheduleSort] = useState('date');
   const [scheduleDayFilter, setScheduleDayFilter] = useState('all');
   const [plannerQuery, setPlannerQuery] = useState('');
@@ -215,6 +304,13 @@ function App() {
       return a.course.localeCompare(b.course);
     });
   }, [scheduleSort, scheduleDayFilter]);
+
+  const examsByDay = useMemo(() => {
+  return calendarDays.reduce((acc, day) => {
+    acc[day] = examSchedule.filter((exam) => exam.day === day);
+    return acc;
+  }, {});
+}, []);
 
   const filteredQuickActions = useMemo(() => {
     const normalizedQuery = actionQuery.trim().toLowerCase();
@@ -468,75 +564,180 @@ function App() {
               <article className="card classes-priority">
                 <div className="card-title-row">
                   <SchoolIcon />
-                  <h2>Weekly Schedule</h2>
+                  <h2>Academics</h2>
                   <select className="schedule-term-select" defaultValue="Spring 2026">
                     <option>Spring 2026</option>
                     <option>Summer 2026</option>
                     <option>Fall 2026</option>
                   </select>
+                  <div className="tabs">
+                    <button
+                      className={`tab-button ${scheduleTab === 'schedule' ? 'active' : ''}`}
+                      onClick={() => setScheduleTab('schedule')}
+                    >
+                      Weekly Schedule
+                    </button>
+
+                    <button
+                      className={`tab-button ${scheduleTab === 'grades' ? 'active' : ''}`}
+                      onClick={() => setScheduleTab('grades')}
+                    >
+                      Grades
+                    </button>
+
+                    <button
+                      className={`tab-button ${scheduleTab === 'finals' ? 'active' : ''}`}
+                      onClick={() => setScheduleTab('finals')}
+                    >
+                      Final Exam Schedule
+                    </button>
+                  </div>
                 </div>
                 <div className="schedule-content-box">
-                  <p className="focus-hint">Showing your full class schedule for today.</p>
-                  <div className="calendar-view" aria-label="Weekly calendar view">
-                    {calendarDays.map((day) => (
-                      <div className="calendar-day" key={day}>
-                        <h3>{day}</h3>
-                        <ul>
-                          {scheduleByDay[day].length > 0 ? (
-                            scheduleByDay[day].map((item) => (
-                              <li key={`${item.course}-${day}`}>
-                                <strong>{item.course}</strong>
-                                <span>{item.meeting.replace('MoWe ', '').replace('TuTh ', '')}</span>
-                              </li>
-                            ))
-                          ) : (
-                            <li className="calendar-empty">No class</li>
-                          )}
-                        </ul>
+                  {scheduleTab === 'schedule' ? (
+                    <>
+                      <p className="focus-hint">Showing your full class schedule for today.</p>
+                      <div className="calendar-view" aria-label="Weekly calendar view">
+                        {calendarDays.map((day) => (
+                          <div className="calendar-day" key={day}>
+                            <h3>{day}</h3>
+                            <ul>
+                              {scheduleByDay[day].length > 0 ? (
+                                scheduleByDay[day].map((item) => (
+                                  <li key={`${item.course}-${day}`}>
+                                    <strong>{item.course}</strong>
+                                    <span>{item.meeting.replace('MoWe ', '').replace('TuTh ', '')}</span>
+                                  </li>
+                                ))
+                              ) : (
+                                <li className="calendar-empty">No class</li>
+                              )}
+                            </ul>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <div className="schedule-toolbar" role="group" aria-label="Schedule controls">
-                    <label className="schedule-control" htmlFor="schedule-sort-select">
-                      <span><AccessTimeIcon fontSize="small" /> Sort By</span>
-                      <select
-                        id="schedule-sort-select"
-                        className="schedule-control-select"
-                        value={scheduleSort}
-                        onChange={(event) => setScheduleSort(event.target.value)}
-                      >
-                        <option value="date">Date/Time</option>
-                        <option value="name">Course Name</option>
-                        <option value="room">Room</option>
-                      </select>
-                    </label>
-                    <label className="schedule-control" htmlFor="schedule-day-filter-select">
-                      <span><FilterAltIcon fontSize="small" /> Day Filter</span>
-                      <select
-                        id="schedule-day-filter-select"
-                        className="schedule-control-select"
-                        value={scheduleDayFilter}
-                        onChange={(event) => setScheduleDayFilter(event.target.value)}
-                      >
-                        <option value="all">All Days</option>
-                        <option value="mw">Mon/Wed</option>
-                        <option value="tuth">Tue/Thu</option>
-                        <option value="Mo">Monday</option>
-                        <option value="Tu">Tuesday</option>
-                        <option value="We">Wednesday</option>
-                        <option value="Th">Thursday</option>
-                      </select>
-                    </label>
-                  </div>
-                  <ul className="schedule-list">
-                    {visibleSchedule.map((item) => (
-                      <li key={item.course}>
-                        <h3>{item.course}</h3>
-                        <p>{item.meeting}</p>
-                        <span>{item.room}</span>
-                      </li>
-                    ))}
-                  </ul>
+                      <div className="schedule-toolbar" role="group" aria-label="Schedule controls">
+                        <label className="schedule-control" htmlFor="schedule-sort-select">
+                          <span><AccessTimeIcon fontSize="small" /> Sort By</span>
+                          <select
+                            id="schedule-sort-select"
+                            className="schedule-control-select"
+                            value={scheduleSort}
+                            onChange={(event) => setScheduleSort(event.target.value)}
+                          >
+                            <option value="date">Date/Time</option>
+                            <option value="name">Course Name</option>
+                            <option value="room">Room</option>
+                          </select>
+                        </label>
+                        <label className="schedule-control" htmlFor="schedule-day-filter-select">
+                          <span><FilterAltIcon fontSize="small" /> Day Filter</span>
+                          <select
+                            id="schedule-day-filter-select"
+                            className="schedule-control-select"
+                            value={scheduleDayFilter}
+                            onChange={(event) => setScheduleDayFilter(event.target.value)}
+                          >
+                            <option value="all">All Days</option>
+                            <option value="mw">Mon/Wed</option>
+                            <option value="tuth">Tue/Thu</option>
+                            <option value="Mo">Monday</option>
+                            <option value="Tu">Tuesday</option>
+                            <option value="We">Wednesday</option>
+                            <option value="Th">Thursday</option>
+                          </select>
+                        </label>
+                      </div>
+                      <ul className="schedule-list">
+                        {visibleSchedule.map((item) => (
+                          <li key={item.course}>
+                            <h3>{item.course}</h3>
+                            <p>{item.meeting}</p>
+                            <span>{item.room}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : scheduleTab === 'grades' ? (
+                    <>
+                      <p className="focus-hint">Your current grades for this term.</p>
+
+                      <table className="grades-table">
+                        <thead>
+                          <tr>
+                            <th>Course</th>
+                            <th>Grade</th>
+                            <th>Units</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {classesData.map((item) => (
+                            <tr key={item.course}>
+                              <td>{item.course}</td>
+                              <td>{item.grade}</td>
+                              <td>{item.units}</td>
+                            </tr>
+                          ))}
+
+                          <tr className="gpa-row">
+                            <td colSpan="2">Term GPA</td>
+                            <td>{termGPA}</td>
+                          </tr>
+
+                          <tr className="gpa-row cumulative">
+                            <td colSpan="2">Cumulative GPA</td>
+                            <td>{cumulativeGPA}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </>
+                  ) : scheduleTab === 'finals' ? (
+                    <>
+                      <p className="focus-hint">Your final exam schedule for this term.</p>
+
+                      <div className="calendar-view">
+                        {calendarDays.map((day) => (
+                          <div className="calendar-day" key={day}>
+                            <h3>{day}</h3>
+                            <ul>
+                              {examsByDay[day].length > 0 ? (
+                                examsByDay[day].map((exam) => (
+                                  <li key={`${exam.course}-${day}`}>
+                                    <strong>{exam.course}</strong>
+                                    <span>{exam.time}</span>
+                                    <small>{exam.location}</small>
+                                  </li>
+                                ))
+                              ) : (
+                                <li className="calendar-empty">No exams</li>
+                              )}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                      <h3 style={{ marginTop: '2rem' }}>Final Exam Schedule</h3>
+                      <table className="exam-table">
+                        <thead>
+                          <tr>
+                            <th>Course</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {examSchedule.map((exam) => (
+                            <tr key={exam.course}>
+                              <td>{exam.course}</td>
+                              <td>{exam.date}</td>
+                              <td>{exam.time}</td>
+                              <td>{exam.location}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  ) : null}
                 </div>
               </article>
 
