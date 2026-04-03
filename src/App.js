@@ -120,6 +120,27 @@ const examSchedule = [
   },
 ];
 
+const enrollmentWindows = {
+  'Spring 2026': {
+    openDate: 'April 1, 2026',
+    deadline: 'August 15, 2026',
+    startISO: '2026-04-01T08:00:00',
+    endISO: '2026-08-15T23:59:59',
+  },
+  'Summer 2026': {
+    openDate: 'February 10, 2026',
+    deadline: 'June 1, 2026',
+    startISO: '2026-02-10T08:00:00',
+    endISO: '2026-06-01T23:59:59',
+  },
+  'Fall 2026': {
+    openDate: 'June 3, 2026',
+    deadline: 'December 20, 2026',
+    startISO: '2026-06-03T08:00:00',
+    endISO: '2026-12-20T23:59:59',
+  },
+};
+
 const quickActions = ['Search Classes', 'Degree Planner', 'My Textbooks', 'Transcripts'];
 
 const resources = [
@@ -228,11 +249,24 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [scheduleTab, setScheduleTab] = useState('schedule');
+  const [selectedEnrollmentTerm, setSelectedEnrollmentTerm] = useState('Spring 2026');
   const [scheduleSort, setScheduleSort] = useState('date');
   const [scheduleDayFilter, setScheduleDayFilter] = useState('all');
   const [plannerQuery, setPlannerQuery] = useState('');
   const [plannerClasses, setPlannerClasses] = useState(initialPlannerClasses);
   const [enrollmentCart, setEnrollmentCart] = useState([]);
+  const [activePersonalEditor, setActivePersonalEditor] = useState(null);
+  const [contactEditForm, setContactEditForm] = useState({
+    homeAddress: '',
+    mailingAddress: '',
+    preferredPhone: '',
+    preferredEmail: '',
+    demographicData: '',
+    emergencyContact: '',
+    names: '',
+    userPreference: '',
+    privacySettings: '',
+  });
   const [newClassForm, setNewClassForm] = useState({
     code: '',
     title: '',
@@ -252,8 +286,9 @@ function App() {
   const [notice, setNotice] = useState(null);
 
   const outstandingCharges = 0;
-  const enrollmentDate = new Date('2026-04-01T08:00:00');
-  const enrollmentEndDate = new Date('2026-08-15T23:59:59');
+  const activeEnrollmentWindow = enrollmentWindows[selectedEnrollmentTerm];
+  const enrollmentDate = new Date(activeEnrollmentWindow.startISO);
+  const enrollmentEndDate = new Date(activeEnrollmentWindow.endISO);
   const today = new Date();
   const canMakePayment = outstandingCharges > 0;
   const canEnroll = today >= enrollmentDate && today <= enrollmentEndDate;
@@ -427,6 +462,73 @@ function App() {
     }));
   }
 
+  function handleOpenContactEditor(section) {
+    setContactEditForm({
+      homeAddress: personalInfo.homeAddress,
+      mailingAddress: personalInfo.mailingAddress,
+      preferredPhone: personalInfo.preferredPhone,
+      preferredEmail: personalInfo.preferredEmail,
+      demographicData: personalInfo.demographicData,
+      emergencyContact: personalInfo.emergencyContact,
+      names: personalInfo.names,
+      userPreference: personalInfo.userPreference,
+      privacySettings: personalInfo.privacySettings,
+    });
+    setActivePersonalEditor(section);
+  }
+
+  function handleContactEditChange(field, value) {
+    setContactEditForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }
+
+  function handleSaveContactInfo() {
+    if (!activePersonalEditor) {
+      return;
+    }
+
+    const nextValues = {
+      homeAddress: contactEditForm.homeAddress.trim(),
+      mailingAddress: contactEditForm.mailingAddress.trim(),
+      preferredPhone: contactEditForm.preferredPhone.trim(),
+      preferredEmail: contactEditForm.preferredEmail.trim(),
+      demographicData: contactEditForm.demographicData.trim(),
+      emergencyContact: contactEditForm.emergencyContact.trim(),
+      names: contactEditForm.names.trim(),
+      userPreference: contactEditForm.userPreference.trim(),
+      privacySettings: contactEditForm.privacySettings.trim(),
+    };
+
+    const fieldsBySection = {
+      contact: ['homeAddress', 'mailingAddress', 'preferredPhone', 'preferredEmail'],
+      demographic: ['demographicData'],
+      emergency: ['emergencyContact'],
+      names: ['names'],
+      preference: ['userPreference'],
+      privacy: ['privacySettings'],
+    };
+
+    const sectionFields = fieldsBySection[activePersonalEditor] || [];
+    const hasEmptyRequiredField = sectionFields.some((field) => !nextValues[field]);
+
+    if (hasEmptyRequiredField) {
+      showNotice('warning', 'CSULB Notice: Complete all required fields before saving changes.');
+      return;
+    }
+
+    setPersonalInfo((current) => ({
+      ...current,
+      ...sectionFields.reduce((acc, field) => {
+        acc[field] = nextValues[field];
+        return acc;
+      }, {}),
+    }));
+    setActivePersonalEditor(null);
+    showNotice('success', 'CSULB Notice: Personal information updated successfully.');
+  }
+
   function handleCreateNewClass() {
     if (!newClassForm.code.trim() || !newClassForm.title.trim() || !newClassForm.meeting.trim() || !newClassForm.room.trim()) {
       showNotice('warning', 'CSULB Notice: Complete all class fields before adding a new class.');
@@ -548,16 +650,34 @@ function App() {
 
         {page === 'dashboard' ? (
           <>
-            <section className="hero-card card">
-              <p className="eyebrow">Francisco&apos;s Student Center</p>
-              <h1>Welcome back, Francisco</h1>
-              <h2>Undergraduate Student in Computer Science</h2>
-              <p className="enrollment-date-note">Enrollment Date: April 1, 2026</p>
-              <div className="status-row">
-                <button className="status-pill warning status-pill-button" type="button">
-                  <WarningAmberIcon fontSize="small" /> View Important Alerts
-                </button>
-              </div>
+            <section className="grid-main-side hero-row">
+              <section className="hero-card card">
+                <p className="eyebrow">Francisco&apos;s Student Center</p>
+                <h1>Welcome back, Francisco</h1>
+                <h2>Undergraduate Student in Computer Science</h2>
+                <p className="enrollment-date-note">Enrollment Date: April 1, 2026</p>
+                <div className="status-row">
+                  <button className="status-pill warning status-pill-button important-alert-button" type="button">
+                    <WarningAmberIcon fontSize="small" /> View Important Alerts
+                  </button>
+                </div>
+              </section>
+
+              <article className="priority-checklist-box">
+                <div className="card-title-row">
+                  <EventNoteIcon />
+                  <h2>Priority Checklist</h2>
+                </div>
+                <p className="section-subtitle">What needs attention right now.</p>
+                <ul className="checklist">
+                  <li>Spring 2026 Enrollment: April 1, 2026 - August 15, 2026</li>
+                  <li>Summer 2026 Enrollment: February 10, 2026 - June 1, 2026</li>
+                  <li>Fall 2026 Enrollment: June 3, 2026 - December 20, 2026</li>
+                  <li>To Do List: No items</li>
+                  <li>Admissions: No pending applications</li>
+                  <li>Financial Aid: Ready to review awards</li>
+                </ul>
+              </article>
             </section>
 
             <section className="grid-main-side">
@@ -590,6 +710,13 @@ function App() {
                       onClick={() => setScheduleTab('finals')}
                     >
                       Final Exam Schedule
+                    </button>
+
+                    <button
+                      className={`tab-button ${scheduleTab === 'enrollment' ? 'active' : ''}`}
+                      onClick={() => setScheduleTab('enrollment')}
+                    >
+                      Enrollment
                     </button>
                   </div>
                 </div>
@@ -737,6 +864,61 @@ function App() {
                         </tbody>
                       </table>
                     </>
+                  ) : scheduleTab === 'enrollment' ? (
+                    <div className="enrollment-section">
+                      <h3>Enrollment</h3>
+                      <p className="section-subtitle">Your enrollment status and deadlines.</p>
+                      <p className="enrollment-tab-note">Choose a term to view its enrollment window and submit registration when it opens.</p>
+                      <span className="status-pill good">
+                        <TaskAltIcon fontSize="small" /> No Holds
+                      </span>
+                      <div className="metric-row side-metrics">
+                        <div style={{ textAlign: 'center' }}>
+                          <p className="metric-label">Current Term</p>
+                          <select
+                            className="term-select"
+                            value={selectedEnrollmentTerm}
+                            onChange={(event) => setSelectedEnrollmentTerm(event.target.value)}
+                          >
+                            {Object.keys(enrollmentWindows).map((term) => (
+                              <option key={term} value={term}>{term}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <p className="metric-label">Enrollment Date</p>
+                          <p className="metric-value">{activeEnrollmentWindow.openDate}</p>
+                        </div>
+                        <div>
+                          <p className="metric-label">Enrollment Deadline</p>
+                          <p className="metric-value">{activeEnrollmentWindow.deadline}</p>
+                        </div>
+                        <div>
+                          <p className="metric-label">Cart Items</p>
+                          <p className="metric-value">{enrollmentCart.length}</p>
+                        </div>
+                      </div>
+                      <button className="financial-aid-button" type="button" onClick={handleViewEnrollmentStatus}>
+                        View Enrollment Status <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                      </button>
+                      <button
+                        className="financial-aid-button"
+                        type="button"
+                        onClick={() => setPage('planner')}
+                      >
+                        <ShoppingCartIcon fontSize="small" /> Open Class Planner
+                        <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                      </button>
+                      <button
+                        className="financial-aid-button"
+                        type="button"
+                        onClick={handleSubmitEnrollment}
+                        disabled={!canSubmitEnrollment}
+                      >
+                        <TaskAltIcon fontSize="small" /> Submit Enrollment
+                        <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                      </button>
+                    </div>
                   ) : null}
                 </div>
               </article>
@@ -784,69 +966,6 @@ function App() {
                   </button>
                 </div>
 
-                <div>
-                  <h2>Enrollment</h2>
-                  <p className="section-subtitle">Your enrollment status and deadlines.</p>
-                  <span className="status-pill good">
-                    <TaskAltIcon fontSize="small" /> No Holds
-                  </span>
-                  <div className="metric-row side-metrics">
-                    <div style={{ textAlign: 'center' }}>
-                      <p className="metric-label">Current Term</p>
-                      <select className="term-select" defaultValue="Spring 2026">
-                        <option>Spring 2026</option>
-                        <option>Summer 2026</option>
-                        <option>Fall 2026</option>
-                      </select>
-                    </div>
-                    <div>
-                      <p className="metric-label">Enrollment Date</p>
-                      <p className="metric-value">April 1, 2026</p>
-                    </div>
-                    <div>
-                      <p className="metric-label">Enrollment Deadline</p>
-                      <p className="metric-value">August 15, 2026</p>
-                    </div>
-                    <div>
-                      <p className="metric-label">Cart Items</p>
-                      <p className="metric-value">{enrollmentCart.length}</p>
-                    </div>
-                  </div>
-                  <button className="financial-aid-button" type="button" onClick={handleViewEnrollmentStatus}>
-                    View Enrollment Status <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                  </button>
-                  <button
-                    className="financial-aid-button"
-                    type="button"
-                    onClick={() => setPage('planner')}
-                  >
-                    <ShoppingCartIcon fontSize="small" /> Open Class Planner
-                    <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                  </button>
-                  <button
-                    className="financial-aid-button"
-                    type="button"
-                    onClick={handleSubmitEnrollment}
-                    disabled={!canSubmitEnrollment}
-                  >
-                    <TaskAltIcon fontSize="small" /> Submit Enrollment
-                    <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                  </button>
-                </div>
-
-                <div className="priority-checklist-box">
-                  <div className="card-title-row">
-                    <EventNoteIcon />
-                    <h2>Priority Checklist</h2>
-                  </div>
-                  <p className="section-subtitle">What needs attention right now.</p>
-                  <ul className="checklist">
-                    <li>To Do List: No items</li>
-                    <li>Admissions: No pending applications</li>
-                    <li>Financial Aid: Ready to review awards</li>
-                    <li>Enrollment Dates: Open enrollment available</li>
-                  </ul>
-                </div>
               </article>
             </section>
 
@@ -906,7 +1025,7 @@ function App() {
             <div className="personal-info-content">
               <div className="info-display-section">
                 <h3 className="info-section-title">Contact Information</h3>
-                
+                <div className="info-display-grid">
                 <div className="info-item">
                   <div className="info-icon">
                     <HomeIcon fontSize="small" />
@@ -946,32 +1065,211 @@ function App() {
                     <p className="info-value">{personalInfo.preferredEmail}</p>
                   </div>
                 </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <PersonIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Names</p>
+                    <p className="info-value">{personalInfo.names}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <PersonIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Demographic Data</p>
+                    <p className="info-value">{personalInfo.demographicData}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <PhoneIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Emergency Contact</p>
+                    <p className="info-value">{personalInfo.emergencyContact}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <EditIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">User Preference</p>
+                    <p className="info-value">{personalInfo.userPreference}</p>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-icon">
+                    <EditIcon fontSize="small" />
+                  </div>
+                  <div className="info-details">
+                    <p className="info-label">Privacy Settings</p>
+                    <p className="info-value">{personalInfo.privacySettings}</p>
+                  </div>
+                </div>
+                </div>
               </div>
 
               <div className="info-actions-section">
                 <h3 className="info-section-title">Update Your Information</h3>
                 <div className="info-actions-grid">
-                  <button className="info-action-button" type="button">
+                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('contact')}>
+                    <EditIcon fontSize="small" />
+                    <span>Contact Information</span>
+                  </button>
+                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('demographic')}>
                     <EditIcon fontSize="small" />
                     <span>Demographic Data</span>
                   </button>
-                  <button className="info-action-button" type="button">
+                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('emergency')}>
                     <EditIcon fontSize="small" />
                     <span>Emergency Contact</span>
                   </button>
-                  <button className="info-action-button" type="button">
+                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('names')}>
                     <EditIcon fontSize="small" />
                     <span>Names</span>
                   </button>
-                  <button className="info-action-button" type="button">
+                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('preference')}>
                     <EditIcon fontSize="small" />
                     <span>User Preference</span>
                   </button>
-                  <button className="info-action-button" type="button">
+                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('privacy')}>
                     <EditIcon fontSize="small" />
                     <span>Privacy Settings</span>
                   </button>
                 </div>
+
+                {activePersonalEditor ? (
+                  <div className="contact-edit-panel">
+                    <p className="focus-hint">
+                      {activePersonalEditor === 'contact'
+                        ? 'Edit your contact information below, then save your changes.'
+                        : `Edit your ${activePersonalEditor === 'demographic' ? 'demographic data' : activePersonalEditor === 'emergency' ? 'emergency contact' : activePersonalEditor === 'names' ? 'name information' : activePersonalEditor === 'preference' ? 'user preference' : 'privacy settings'} below, then save your changes.`}
+                    </p>
+                    <div className="contact-edit-grid">
+                      {activePersonalEditor === 'contact' ? (
+                        <>
+                      <label className="contact-edit-field" htmlFor="contact-home-address">
+                        <span>Home Address</span>
+                        <input
+                          id="contact-home-address"
+                          type="text"
+                          value={contactEditForm.homeAddress}
+                          onChange={(event) => handleContactEditChange('homeAddress', event.target.value)}
+                        />
+                      </label>
+
+                      <label className="contact-edit-field" htmlFor="contact-mailing-address">
+                        <span>Mailing Address</span>
+                        <input
+                          id="contact-mailing-address"
+                          type="text"
+                          value={contactEditForm.mailingAddress}
+                          onChange={(event) => handleContactEditChange('mailingAddress', event.target.value)}
+                        />
+                      </label>
+
+                      <label className="contact-edit-field" htmlFor="contact-phone">
+                        <span>Preferred Phone</span>
+                        <input
+                          id="contact-phone"
+                          type="tel"
+                          value={contactEditForm.preferredPhone}
+                          onChange={(event) => handleContactEditChange('preferredPhone', event.target.value)}
+                        />
+                      </label>
+
+                      <label className="contact-edit-field" htmlFor="contact-email">
+                        <span>Preferred Email</span>
+                        <input
+                          id="contact-email"
+                          type="email"
+                          value={contactEditForm.preferredEmail}
+                          onChange={(event) => handleContactEditChange('preferredEmail', event.target.value)}
+                        />
+                      </label>
+                        </>
+                      ) : null}
+
+                      {activePersonalEditor === 'demographic' ? (
+                        <label className="contact-edit-field" htmlFor="contact-demographic-data">
+                          <span>Demographic Data</span>
+                          <input
+                            id="contact-demographic-data"
+                            type="text"
+                            value={contactEditForm.demographicData}
+                            onChange={(event) => handleContactEditChange('demographicData', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+
+                      {activePersonalEditor === 'emergency' ? (
+                        <label className="contact-edit-field" htmlFor="contact-emergency-contact">
+                          <span>Emergency Contact</span>
+                          <input
+                            id="contact-emergency-contact"
+                            type="text"
+                            value={contactEditForm.emergencyContact}
+                            onChange={(event) => handleContactEditChange('emergencyContact', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+
+                      {activePersonalEditor === 'names' ? (
+                        <label className="contact-edit-field" htmlFor="contact-names">
+                          <span>Names</span>
+                          <input
+                            id="contact-names"
+                            type="text"
+                            value={contactEditForm.names}
+                            onChange={(event) => handleContactEditChange('names', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+
+                      {activePersonalEditor === 'preference' ? (
+                        <label className="contact-edit-field" htmlFor="contact-user-preference">
+                          <span>User Preference</span>
+                          <input
+                            id="contact-user-preference"
+                            type="text"
+                            value={contactEditForm.userPreference}
+                            onChange={(event) => handleContactEditChange('userPreference', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+
+                      {activePersonalEditor === 'privacy' ? (
+                        <label className="contact-edit-field" htmlFor="contact-privacy-settings">
+                          <span>Privacy Settings</span>
+                          <input
+                            id="contact-privacy-settings"
+                            type="text"
+                            value={contactEditForm.privacySettings}
+                            onChange={(event) => handleContactEditChange('privacySettings', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+                    </div>
+
+                    <div className="contact-edit-actions">
+                      <button className="financial-aid-button" type="button" onClick={handleSaveContactInfo}>
+                        Save Changes
+                      </button>
+                      <button className="financial-aid-cancel-btn" type="button" onClick={() => setActivePersonalEditor(null)}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
               </article>
