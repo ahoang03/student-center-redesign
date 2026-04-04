@@ -1051,7 +1051,7 @@ function App() {
                         disabled={!canSubmitEnrollment}
                       >
                         <TaskAltIcon fontSize="small" /> Submit Enrollment
-                        <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                        <div className="spacer"></div>
                       </button>
                   </div>
                 </article>
@@ -1304,7 +1304,7 @@ function App() {
                           disabled={inCart}
                         >
                           <ShoppingCartIcon fontSize="small" /> {inCart ? 'In Cart' : 'Add To Cart'}
-                          <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                          <div className="spacer"></div>
                         </button>
                       </div>
                     );
@@ -1373,7 +1373,7 @@ function App() {
                 </div>
                 <button className="financial-aid-button" type="button" onClick={handleCreateNewClass}>
                   <AddCircleOutlineIcon fontSize="small" /> Save New Class
-                  <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                  <div className="spacer"></div>
                 </button>
               </article>
             </section>
@@ -1389,7 +1389,7 @@ function App() {
                   disabled={!canSubmitEnrollment}
                 >
                   <TaskAltIcon fontSize="small" /> Submit Enrollment
-                  <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                  <div className="spacer"></div>
                 </button>
               </div>
               {enrollmentCart.length === 0 ? (
