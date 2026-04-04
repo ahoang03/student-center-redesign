@@ -325,9 +325,7 @@
   border-top: 4px solid #de9a1c;
   border-color: #e7c47f;
   background:
-    linear-gradient(130deg, rgba(239, 187, 63, 0.9) 0%, rgba(223, 167, 34, 0.88) 62%, rgba(206, 152, 24, 0.86) 100%),
-    radial-gradient(circle at 90% 18%, rgba(255, 233, 174, 0.24), transparent 34%),
-    #dfab30;
+    #fac13c;
   box-shadow: 0 8px 16px rgba(144, 103, 10, 0.2), inset 0 1px 0 rgba(255, 240, 201, 0.16);
   padding: 0.9rem 1rem;
   position: relative;
@@ -429,21 +427,19 @@ h3 {
 
 .status-pill-button:hover {
   background: #ffe9a0;
+  color: rgb(173, 15, 15);
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(154, 104, 0, 0.2);
 }
 
 .important-alert-button {
-  background: linear-gradient(90deg, #ffb366 0%, #f17a1f 72%);
+  background: #f17a1f;
   color: #2b1704;
   border: 1.5px solid #b4510a;
   font-weight: 800;
-  box-shadow: 0 6px 14px rgba(217, 108, 24, 0.32);
 }
 
 .important-alert-button:hover {
-  background: linear-gradient(90deg, #ffc07c 0%, #f98b33 72%);
-  box-shadow: 0 10px 20px rgba(217, 108, 24, 0.4);
+  background: #f98b33;
 }
 
 .important-alert-button:focus-visible {
@@ -638,6 +634,78 @@ h3 {
   color: var(--muted);
   font-size: 0.9rem;
 }
+
+.schedule-header {
+  display: flex;
+  align-items: center;
+}
+
+.schedule-toggle {
+  display: flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: 0.75rem;
+  margin-left: auto;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  border-radius: 999px;
+  transition: 0.3s;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.switch input:checked + .slider {
+  background-color: var(--csulb-gold);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+.slider:hover {
+  filter: brightness(1.05);
+}
+
+.toggle-label.active {
+  color: var(--csulb-gold);
+  font-weight: 600;
+}
+
 
 .tabs {
   margin-left: auto;
@@ -860,6 +928,13 @@ h3 {
   gap: 0.55rem;
 }
 
+.academic-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+
 .search-label {
   display: block;
   margin-bottom: 0.4rem;
@@ -910,6 +985,38 @@ h3 {
 }
 
 .financial-aid-button:disabled {
+  background: #d8d2c3;
+  border-color: #c8bea7;
+  color: #5f5f5f;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+.submit-enrollment-button {
+  width: 15%;
+  margin-bottom: 0.7rem;
+  margin-left: auto;
+  border: 1px solid #ae8515;
+  border-radius: 10px;
+  padding: 0.72rem 0.85rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #f3bf4b, #dda31d);
+  color: #1f1f1f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: filter 0.16s ease, transform 0.16s ease;
+}
+
+.submit-enrollment-button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.submit-enrollment-button:disabled {
   background: #d8d2c3;
   border-color: #c8bea7;
   color: #5f5f5f;

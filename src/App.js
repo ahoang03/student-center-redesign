@@ -141,7 +141,8 @@ const enrollmentWindows = {
   },
 };
 
-const quickActions = ['Search Classes', 'Degree Planner', 'My Textbooks', 'Transcripts'];
+const academicsActions = ['Academic Requirements', 'Apply for Graduation', 'Course History', 'Advisor Notes', 'Veterans Benefit', 'Withdrawals/Repeats', 'What-if Report', 'Transfer Credit Report', 'Transcript', 'Browse Schedule'];
+const quickActions = ['Search Classes', 'Degree Planner', 'My Textbooks','CSU Fully Online', 'Apply For Admission', 'View Test Scores'];
 
 const resources = [
   { label: 'Register to Vote', href: 'https://registertovote.ca.gov/' },
@@ -251,6 +252,7 @@ function App() {
   const [isClosing, setIsClosing] = useState(false);
   const [scheduleTab, setScheduleTab] = useState('schedule');
   const [selectedEnrollmentTerm, setSelectedEnrollmentTerm] = useState('Spring 2026');
+  const [scheduleMode, setScheduleMode] = useState(false);
   const [scheduleSort, setScheduleSort] = useState('date');
   const [scheduleDayFilter, setScheduleDayFilter] = useState('all');
   const [plannerQuery, setPlannerQuery] = useState('');
@@ -703,7 +705,6 @@ function App() {
                 <p className="eyebrow">Francisco&apos;s Student Center</p>
                 <h1>Welcome back, Francisco</h1>
                 <h2>Undergraduate Student in Computer Science</h2>
-                <p className="enrollment-date-note">Enrollment Date: April 1, 2026</p>
                 <div className="status-row">
                   <button className="status-pill warning status-pill-button important-alert-button" type="button">
                     <WarningAmberIcon fontSize="small" /> View Important Alerts
@@ -764,67 +765,98 @@ function App() {
                 <div className="schedule-content-box">
                   {scheduleTab === 'schedule' ? (
                     <>
-                      <p className="focus-hint">Showing your full class schedule for today.</p>
-                      <div className="calendar-view" aria-label="Weekly calendar view">
-                        {calendarDays.map((day) => (
-                          <div className="calendar-day" key={day}>
-                            <h3>{day}</h3>
-                            <ul>
-                              {scheduleByDay[day].length > 0 ? (
-                                scheduleByDay[day].map((item) => (
-                                  <li key={`${item.course}-${day}`}>
-                                    <strong>{item.course}</strong>
-                                    <span>{item.meeting.replace('MoWe ', '').replace('TuTh ', '')}</span>
-                                  </li>
-                                ))
-                              ) : (
-                                <li className="calendar-empty">No class</li>
-                              )}
-                            </ul>
+                      <div className="schedule-header">
+                        <span className="focus-hint">
+                          Your classes for this term.
+                        </span>
+                        <div className="schedule-toggle">
+                          <span className={`toggle-label ${!scheduleMode ? 'active' : ''}`}>
+                            Calendar
+                          </span>
+
+                          <label className="switch">
+                            <input
+                              type="checkbox"
+                              checked={scheduleMode}
+                              onChange={() => setScheduleMode(prev => !prev)}
+                            />
+                            <span className="slider"></span>
+                          </label>
+
+                          <span className={`toggle-label ${scheduleMode ? 'active' : ''}`}>
+                            List
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {scheduleMode === false ? (
+                        <>
+                          <div className="calendar-view" aria-label="Weekly calendar view">
+                            {calendarDays.map((day) => (
+                              <div className="calendar-day" key={day}>
+                                <h3>{day}</h3>
+                                <ul>
+                                  {scheduleByDay[day].length > 0 ? (
+                                    scheduleByDay[day].map((item) => (
+                                      <li key={`${item.course}-${day}`}>
+                                        <strong>{item.course}</strong>
+                                        <span>{item.meeting.replace('MoWe ', '').replace('TuTh ', '')}</span>
+                                        <span>{item.room}</span>
+                                      </li>
+                                    ))
+                                  ) : (
+                                    <li className="calendar-empty">No class</li>
+                                  )}
+                                </ul>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                      <div className="schedule-toolbar" role="group" aria-label="Schedule controls">
-                        <label className="schedule-control" htmlFor="schedule-sort-select">
-                          <span><AccessTimeIcon fontSize="small" /> Sort By</span>
-                          <select
-                            id="schedule-sort-select"
-                            className="schedule-control-select"
-                            value={scheduleSort}
-                            onChange={(event) => setScheduleSort(event.target.value)}
-                          >
-                            <option value="date">Date/Time</option>
-                            <option value="name">Course Name</option>
-                            <option value="room">Room</option>
-                          </select>
-                        </label>
-                        <label className="schedule-control" htmlFor="schedule-day-filter-select">
-                          <span><FilterAltIcon fontSize="small" /> Day Filter</span>
-                          <select
-                            id="schedule-day-filter-select"
-                            className="schedule-control-select"
-                            value={scheduleDayFilter}
-                            onChange={(event) => setScheduleDayFilter(event.target.value)}
-                          >
-                            <option value="all">All Days</option>
-                            <option value="mw">Mon/Wed</option>
-                            <option value="tuth">Tue/Thu</option>
-                            <option value="Mo">Monday</option>
-                            <option value="Tu">Tuesday</option>
-                            <option value="We">Wednesday</option>
-                            <option value="Th">Thursday</option>
-                          </select>
-                        </label>
-                      </div>
-                      <ul className="schedule-list">
-                        {visibleSchedule.map((item) => (
-                          <li key={item.course}>
-                            <h3>{item.course}</h3>
-                            <p>{item.meeting}</p>
-                            <span>{item.room}</span>
-                          </li>
-                        ))}
-                      </ul>
+                        </>
+                      ) : scheduleMode === true ? (
+                        <>
+                          <div className="schedule-toolbar" role="group" aria-label="Schedule controls">
+                            <label className="schedule-control" htmlFor="schedule-sort-select">
+                              <span><AccessTimeIcon fontSize="small" /> Sort By</span>
+                              <select
+                                id="schedule-sort-select"
+                                className="schedule-control-select"
+                                value={scheduleSort}
+                                onChange={(event) => setScheduleSort(event.target.value)}
+                              >
+                                <option value="date">Date/Time</option>
+                                <option value="name">Course Name</option>
+                                <option value="room">Room</option>
+                              </select>
+                            </label>
+                            <label className="schedule-control" htmlFor="schedule-day-filter-select">
+                              <span><FilterAltIcon fontSize="small" /> Day Filter</span>
+                              <select
+                                id="schedule-day-filter-select"
+                                className="schedule-control-select"
+                                value={scheduleDayFilter}
+                                onChange={(event) => setScheduleDayFilter(event.target.value)}
+                              >
+                                <option value="all">All Days</option>
+                                <option value="mw">Mon/Wed</option>
+                                <option value="tuth">Tue/Thu</option>
+                                <option value="Mo">Monday</option>
+                                <option value="Tu">Tuesday</option>
+                                <option value="We">Wednesday</option>
+                                <option value="Th">Thursday</option>
+                              </select>
+                            </label>
+                          </div>
+                          <ul className="schedule-list">
+                            {visibleSchedule.map((item) => (
+                              <li key={item.course}>
+                                <h3>{item.course}</h3>
+                                <p>{item.meeting}</p>
+                                <span>{item.room}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </>
+                      ) : null}
                     </>
                   ) : scheduleTab === 'grades' ? (
                     <>
@@ -907,6 +939,13 @@ function App() {
                     </>
                   ) : null}
                 </div>
+                <div className="academic-actions-grid">
+                  {academicsActions.map((action) => (
+                    <button key={action} className="action-button" type="button">
+                      {action} <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    </button>
+                  ))}
+                </div>
               </article>
 
               <div className="right-column">
@@ -937,19 +976,25 @@ function App() {
                     <button className="financial-aid-button" type="button" onClick={handleViewFinancialDetails}>
                       View Financial Details <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                     </button>
-                    <a
-                      className="finance-link"
-                      href="https://www.csulb.edu/financial-aid-and-scholarships/refunds"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      E-Refund Sign Up
-                    </a>
                     <button className="financial-aid-button" type="button" onClick={() => setPage('financialAid')}>
                       Accept/Decline Award Package <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                     </button>
                     <button className="financial-aid-button" type="button" onClick={handleMakePayment} disabled={!canMakePayment}>
                       Make a Payment <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    </button>
+                    <button
+                      className="financial-aid-button"
+                      type="button"
+                      onClick={() => window.open(
+                        "https://www.csulb.edu/financial-aid-and-scholarships/refunds",
+                        "_blank"
+                      )}
+                    >
+                      E-Refund Sign Up
+                      <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    </button>
+                    <button className="financial-aid-button" type="button">
+                      View 1098-T <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                     </button>
                   </div>
               </article>
@@ -1340,6 +1385,15 @@ function App() {
               <div className="card-title-row">
                 <ShoppingCartIcon />
                 <h2>Enrollment Cart</h2>
+                <button
+                  className="submit-enrollment-button"
+                  type="button"
+                  onClick={handleSubmitEnrollment}
+                  disabled={!canSubmitEnrollment}
+                >
+                  <TaskAltIcon fontSize="small" /> Submit Enrollment
+                  <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                </button>
               </div>
               {enrollmentCart.length === 0 ? (
                 <p className="focus-hint">Your cart is empty. Add a class from the planner list.</p>
