@@ -463,6 +463,12 @@ h3 {
   gap: 1rem;
 }
 
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .hero-row {
   grid-template-columns: 1.65fr 1fr;
 }
@@ -471,20 +477,29 @@ h3 {
   border-top: 4px solid var(--csulb-gold);
 }
 
+.enrollment-priority {
+  border-top: 4px solid #2b95b6;
+}
+
+
 .new-class-priority {
   border-top: 4px solid var(--csulb-black);
 }
 
 .finance-priority {
+  border-top: 4px solid #027a48;
+}
+
+.financial-aid-priority {
   border-top: 4px solid var(--csulb-gold);
 }
 
 .quick-actions-priority {
-  border-top: 4px solid var(--csulb-gold);
+  border-top: 4px solid #0a4d9f;
 }
 
 .resources-priority {
-  border-top: 4px solid var(--csulb-black);
+  border-top: 4px solid #555;
 }
 
 .personal-info-priority {

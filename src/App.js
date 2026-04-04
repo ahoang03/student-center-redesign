@@ -718,12 +718,12 @@ function App() {
                 </div>
                 <p className="section-subtitle">What needs attention right now.</p>
                 <ul className="checklist">
-                  <li>Spring 2026 Enrollment: April 1, 2026 - August 15, 2026</li>
-                  <li>Summer 2026 Enrollment: February 10, 2026 - June 1, 2026</li>
-                  <li>Fall 2026 Enrollment: June 3, 2026 - December 20, 2026</li>
-                  <li>To Do List: No items</li>
-                  <li>Admissions: No pending applications</li>
-                  <li>Financial Aid: Ready to review awards</li>
+                  <li><strong>Spring 2026 Enrollment:</strong> April 1, 2026 - August 15, 2026</li>
+                  <li><strong>Summer 2026 Enrollment: </strong>February 10, 2026 - June 1, 2026</li>
+                  <li><strong>Fall 2026 Enrollment: </strong>June 3, 2026 - December 20, 2026</li>
+                  <li><strong>To Do:</strong> No items</li>
+                  <li><strong>Admissions:</strong> No pending applications</li>
+                  <li><strong>Financial Aid:</strong> Ready to review awards</li>
                 </ul>
               </article>
             </section>
@@ -758,13 +758,6 @@ function App() {
                       onClick={() => setScheduleTab('finals')}
                     >
                       Final Exam Schedule
-                    </button>
-
-                    <button
-                      className={`tab-button ${scheduleTab === 'enrollment' ? 'active' : ''}`}
-                      onClick={() => setScheduleTab('enrollment')}
-                    >
-                      Enrollment
                     </button>
                   </div>
                 </div>
@@ -912,110 +905,116 @@ function App() {
                         </tbody>
                       </table>
                     </>
-                  ) : scheduleTab === 'enrollment' ? (
-                    <>
-                      <div className="enrollment-section">
-                        <h3>Enrollment</h3>
-                        <p className="section-subtitle">Your enrollment status and deadlines.</p>
-                        <p className="enrollment-tab-note">Choose a term to view its enrollment window and submit registration when it opens.</p>
-                        <span className="status-pill good">
-                          <TaskAltIcon fontSize="small" /> No Holds
-                        </span>
-                        <div className="metric-row side-metrics">
-                          <div style={{ textAlign: 'center' }}>
-                            <p className="metric-label">Current Term</p>
-                            <select
-                              className="term-select"
-                              value={selectedEnrollmentTerm}
-                              onChange={(event) => setSelectedEnrollmentTerm(event.target.value)}
-                            >
-                              {Object.keys(enrollmentWindows).map((term) => (
-                                <option key={term} value={term}>{term}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <div>
-                            <p className="metric-label">Enrollment Date</p>
-                            <p className="metric-value">{activeEnrollmentWindow.openDate}</p>
-                          </div>
-                          <div>
-                            <p className="metric-label">Enrollment Deadline</p>
-                            <p className="metric-value">{activeEnrollmentWindow.deadline}</p>
-                          </div>
-                          <div>
-                            <p className="metric-label">Cart Items</p>
-                            <p className="metric-value">{enrollmentCart.length}</p>
-                          </div>
-                        </div>
-                        <button className="financial-aid-button" type="button" onClick={handleViewEnrollmentStatus}>
-                          View Enrollment Status <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                        </button>
-                        <button
-                          className="financial-aid-button"
-                          type="button"
-                          onClick={() => setPage('planner')}
-                        >
-                          <ShoppingCartIcon fontSize="small" /> Open Class Planner
-                          <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                        </button>
-                        <button
-                          className="financial-aid-button"
-                          type="button"
-                          onClick={handleSubmitEnrollment}
-                          disabled={!canSubmitEnrollment}
-                        >
-                          <TaskAltIcon fontSize="small" /> Submit Enrollment
-                          <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                        </button>
-                      </div>
-                    </>
                   ) : null}
                 </div>
               </article>
 
-              <article className="card stack finance-priority">
-                <div>
-                  <div className="card-title-row">
-                    <AttachMoneyIcon className="finances-icon"/>
-                    <h2>Finances</h2>
+              <div className="right-column">
+                <article className="card stack finance-priority">
+                  <div>
+                    <div className="card-title-row">
+                      <AttachMoneyIcon className="finances-icon"/>
+                      <h2>Finances</h2>
+                    </div>
+                    <p className="section-subtitle">Your account and aid summary.</p>
+                    <span className="status-pill good">
+                      <AttachMoneyIcon fontSize="small" /> No Outstanding Charges
+                    </span>
+                    <div className="metric-row side-metrics">
+                      <div>
+                        <p className="metric-label">Outstanding Charges</p>
+                        <p className="metric-value">${outstandingCharges.toFixed(2)}</p>
+                      </div>
+                      <div>
+                        <p className="metric-label">Financial Aid Estimate</p>
+                        <p className="metric-value">$4,850.00</p>
+                      </div>
+                      <div>
+                        <p className="metric-label">Account Status</p>
+                        <p className="metric-value">Clear</p>
+                      </div>
+                    </div>
+                    <button className="financial-aid-button" type="button" onClick={handleViewFinancialDetails}>
+                      View Financial Details <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    </button>
+                    <a
+                      className="finance-link"
+                      href="https://www.csulb.edu/financial-aid-and-scholarships/refunds"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      E-Refund Sign Up
+                    </a>
+                    <button className="financial-aid-button" type="button" onClick={() => setPage('financialAid')}>
+                      Accept/Decline Award Package <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    </button>
+                    <button className="financial-aid-button" type="button" onClick={handleMakePayment} disabled={!canMakePayment}>
+                      Make a Payment <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    </button>
                   </div>
-                  <p className="section-subtitle">Your account and aid summary.</p>
-                  <span className="status-pill good">
-                    <AttachMoneyIcon fontSize="small" /> No Outstanding Charges
-                  </span>
-                  <div className="metric-row side-metrics">
-                    <div>
-                      <p className="metric-label">Outstanding Charges</p>
-                      <p className="metric-value">${outstandingCharges.toFixed(2)}</p>
-                    </div>
-                    <div>
-                      <p className="metric-label">Financial Aid Estimate</p>
-                      <p className="metric-value">$4,850.00</p>
-                    </div>
-                    <div>
-                      <p className="metric-label">Account Status</p>
-                      <p className="metric-value">Clear</p>
-                    </div>
-                  </div>
-                  <button className="financial-aid-button" type="button" onClick={handleViewFinancialDetails}>
-                    View Financial Details <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                  </button>
-                  <a
-                    className="finance-link"
-                    href="https://www.csulb.edu/financial-aid-and-scholarships/refunds"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    E-Refund Sign Up
-                  </a>
-                  <button className="financial-aid-button" type="button" onClick={() => setPage('financialAid')}>
-                    Accept/Decline Award Package <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                  </button>
-                  <button className="financial-aid-button" type="button" onClick={handleMakePayment} disabled={!canMakePayment}>
-                    Make a Payment <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                  </button>
-                </div>
               </article>
+
+                <article className="card stack enrollment-priority">
+                  <div>
+                    <div className="card-title-row">
+                      <SchoolIcon className="finances-icon"/>
+                      <h2>Enrollment</h2>
+                    </div>
+                      <p className="section-subtitle">Your enrollment status and deadlines.</p>
+                      <p className="enrollment-tab-note">Choose a term to view its enrollment window and submit registration when it opens.</p>
+                      <span className="status-pill good">
+                        <TaskAltIcon fontSize="small" /> No Holds
+                      </span>
+                      <div className="metric-row side-metrics">
+                        <div style={{ textAlign: 'center' }}>
+                          <p className="metric-label">Current Term</p>
+                          <select
+                            className="term-select"
+                            value={selectedEnrollmentTerm}
+                            onChange={(event) => setSelectedEnrollmentTerm(event.target.value)}
+                          >
+                            {Object.keys(enrollmentWindows).map((term) => (
+                              <option key={term} value={term}>{term}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <p className="metric-label">Enrollment Date</p>
+                          <p className="metric-value">{activeEnrollmentWindow.openDate}</p>
+                        </div>
+                        <div>
+                          <p className="metric-label">Enrollment Deadline</p>
+                          <p className="metric-value">{activeEnrollmentWindow.deadline}</p>
+                        </div>
+                        <div>
+                          <p className="metric-label">Cart Items</p>
+                          <p className="metric-value">{enrollmentCart.length}</p>
+                        </div>
+                      </div>
+                      <button className="financial-aid-button" type="button" onClick={handleViewEnrollmentStatus}>
+                        View Enrollment Status <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                      </button>
+                      <button
+                        className="financial-aid-button"
+                        type="button"
+                        onClick={() => setPage('planner')}
+                      >
+                        <ShoppingCartIcon fontSize="small" /> Open Class Planner
+                        <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                      </button>
+                      <button
+                        className="financial-aid-button"
+                        type="button"
+                        onClick={handleSubmitEnrollment}
+                        disabled={!canSubmitEnrollment}
+                      >
+                        <TaskAltIcon fontSize="small" /> Submit Enrollment
+                        <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                      </button>
+                  </div>
+                </article>
+              </div>
+              
             </section>
 
             <section className="grid-two">
@@ -1082,7 +1081,7 @@ function App() {
               </div>
             </section>
 
-            <section className="card finance-priority">
+            <section className="card financial-aid-priority">
               <div className="card-title-row">
                 <AttachMoneyIcon />
                 <h2>Award Package</h2>
