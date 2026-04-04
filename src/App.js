@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import './App.css';
 import logo from './assets/csulb_logo.png';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -247,6 +247,7 @@ function App() {
   const [page, setPage] = useState('dashboard');
   const [actionQuery, setActionQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [scheduleTab, setScheduleTab] = useState('schedule');
   const [selectedEnrollmentTerm, setSelectedEnrollmentTerm] = useState('Spring 2026');
@@ -284,6 +285,19 @@ function App() {
     }
   });
   const [notice, setNotice] = useState(null);
+
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowProfileMenu(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const outstandingCharges = 0;
   const activeEnrollmentWindow = enrollmentWindows[selectedEnrollmentTerm];
@@ -579,15 +593,42 @@ function App() {
     <div className="student-center-app">
       <header className="topbar">
         <button className="icon-button" type="button" aria-label="Open navigation menu" onClick={() => {
-  setSidebarOpen(true);
-  setIsClosing(false);
-}}>
+          setSidebarOpen(true);
+          setIsClosing(false);
+        }}>
           <MenuIcon className="topbar-icon" />
         </button>
         <img src={logo} className="csulb-logo" alt="CSULB logo" />
-        <button className="icon-button" type="button" aria-label="Open account menu">
-          <AccountCircleIcon className="topbar-icon" />
-        </button>
+        <div className="profile-menu-wrapper" ref={menuRef}>
+          <button
+            className="icon-button"
+            type="button"
+            aria-label="Open account menu"
+            onClick={() => setShowProfileMenu(prev => !prev)}
+          >
+            <AccountCircleIcon className="topbar-icon" />
+          </button>
+
+          {showProfileMenu && (
+            <div className="profile-dropdown">
+              <div className="dropdown-header">
+                <strong>Francisco</strong>
+                <span>Student</span>
+              </div>
+
+              <button onClick={() => {
+                setPage('personal-info');
+                setShowProfileMenu(false);
+              }}>
+                Personal Information
+              </button>
+
+              <button className="logout">
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
       {(sidebarOpen || isClosing) && (
@@ -623,6 +664,13 @@ function App() {
                 onClick={() => { setPage('financialAid'); setSidebarOpen(false); }}
               >
                 <AttachMoneyIcon fontSize="small" />Financial Aid <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+              </button>
+
+              <button
+                className={`sidebar-link ${page === 'personal-info' ? 'active' : ''}`}
+                onClick={() => { setPage('personal-info'); setSidebarOpen(false); }}
+              >
+                <AccountCircleIcon fontSize="small" />Personal Info <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
               </button>
             </nav>
           </aside>
@@ -865,60 +913,62 @@ function App() {
                       </table>
                     </>
                   ) : scheduleTab === 'enrollment' ? (
-                    <div className="enrollment-section">
-                      <h3>Enrollment</h3>
-                      <p className="section-subtitle">Your enrollment status and deadlines.</p>
-                      <p className="enrollment-tab-note">Choose a term to view its enrollment window and submit registration when it opens.</p>
-                      <span className="status-pill good">
-                        <TaskAltIcon fontSize="small" /> No Holds
-                      </span>
-                      <div className="metric-row side-metrics">
-                        <div style={{ textAlign: 'center' }}>
-                          <p className="metric-label">Current Term</p>
-                          <select
-                            className="term-select"
-                            value={selectedEnrollmentTerm}
-                            onChange={(event) => setSelectedEnrollmentTerm(event.target.value)}
-                          >
-                            {Object.keys(enrollmentWindows).map((term) => (
-                              <option key={term} value={term}>{term}</option>
-                            ))}
-                          </select>
+                    <>
+                      <div className="enrollment-section">
+                        <h3>Enrollment</h3>
+                        <p className="section-subtitle">Your enrollment status and deadlines.</p>
+                        <p className="enrollment-tab-note">Choose a term to view its enrollment window and submit registration when it opens.</p>
+                        <span className="status-pill good">
+                          <TaskAltIcon fontSize="small" /> No Holds
+                        </span>
+                        <div className="metric-row side-metrics">
+                          <div style={{ textAlign: 'center' }}>
+                            <p className="metric-label">Current Term</p>
+                            <select
+                              className="term-select"
+                              value={selectedEnrollmentTerm}
+                              onChange={(event) => setSelectedEnrollmentTerm(event.target.value)}
+                            >
+                              {Object.keys(enrollmentWindows).map((term) => (
+                                <option key={term} value={term}>{term}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <p className="metric-label">Enrollment Date</p>
+                            <p className="metric-value">{activeEnrollmentWindow.openDate}</p>
+                          </div>
+                          <div>
+                            <p className="metric-label">Enrollment Deadline</p>
+                            <p className="metric-value">{activeEnrollmentWindow.deadline}</p>
+                          </div>
+                          <div>
+                            <p className="metric-label">Cart Items</p>
+                            <p className="metric-value">{enrollmentCart.length}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="metric-label">Enrollment Date</p>
-                          <p className="metric-value">{activeEnrollmentWindow.openDate}</p>
-                        </div>
-                        <div>
-                          <p className="metric-label">Enrollment Deadline</p>
-                          <p className="metric-value">{activeEnrollmentWindow.deadline}</p>
-                        </div>
-                        <div>
-                          <p className="metric-label">Cart Items</p>
-                          <p className="metric-value">{enrollmentCart.length}</p>
-                        </div>
+                        <button className="financial-aid-button" type="button" onClick={handleViewEnrollmentStatus}>
+                          View Enrollment Status <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                        </button>
+                        <button
+                          className="financial-aid-button"
+                          type="button"
+                          onClick={() => setPage('planner')}
+                        >
+                          <ShoppingCartIcon fontSize="small" /> Open Class Planner
+                          <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                        </button>
+                        <button
+                          className="financial-aid-button"
+                          type="button"
+                          onClick={handleSubmitEnrollment}
+                          disabled={!canSubmitEnrollment}
+                        >
+                          <TaskAltIcon fontSize="small" /> Submit Enrollment
+                          <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                        </button>
                       </div>
-                      <button className="financial-aid-button" type="button" onClick={handleViewEnrollmentStatus}>
-                        View Enrollment Status <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                      </button>
-                      <button
-                        className="financial-aid-button"
-                        type="button"
-                        onClick={() => setPage('planner')}
-                      >
-                        <ShoppingCartIcon fontSize="small" /> Open Class Planner
-                        <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                      </button>
-                      <button
-                        className="financial-aid-button"
-                        type="button"
-                        onClick={handleSubmitEnrollment}
-                        disabled={!canSubmitEnrollment}
-                      >
-                        <TaskAltIcon fontSize="small" /> Submit Enrollment
-                        <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                      </button>
-                    </div>
+                    </>
                   ) : null}
                 </div>
               </article>
@@ -965,7 +1015,6 @@ function App() {
                     Make a Payment <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                   </button>
                 </div>
-
               </article>
             </section>
 
@@ -1014,266 +1063,6 @@ function App() {
                 </ul>
               </article>
             </section>
-
-            <section className="grid-two">
-              <article className="card personal-info-priority">
-                <div className="card-title-row">
-                  <PersonIcon />
-                  <h2>Personal Information</h2>
-                </div>
-            
-            <div className="personal-info-content">
-              <div className="info-display-section">
-                <h3 className="info-section-title">Contact Information</h3>
-                <div className="info-display-grid">
-                <div className="info-item">
-                  <div className="info-icon">
-                    <HomeIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">Home Address</p>
-                    <p className="info-value">{personalInfo.homeAddress}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">
-                    <HomeIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">Mailing Address</p>
-                    <p className="info-value">{personalInfo.mailingAddress}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">
-                    <PhoneIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">Preferred Phone</p>
-                    <p className="info-value">{personalInfo.preferredPhone}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">
-                    <EmailIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">Preferred Email</p>
-                    <p className="info-value">{personalInfo.preferredEmail}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">
-                    <PersonIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">Names</p>
-                    <p className="info-value">{personalInfo.names}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">
-                    <PersonIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">Demographic Data</p>
-                    <p className="info-value">{personalInfo.demographicData}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">
-                    <PhoneIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">Emergency Contact</p>
-                    <p className="info-value">{personalInfo.emergencyContact}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">
-                    <EditIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">User Preference</p>
-                    <p className="info-value">{personalInfo.userPreference}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon">
-                    <EditIcon fontSize="small" />
-                  </div>
-                  <div className="info-details">
-                    <p className="info-label">Privacy Settings</p>
-                    <p className="info-value">{personalInfo.privacySettings}</p>
-                  </div>
-                </div>
-                </div>
-              </div>
-
-              <div className="info-actions-section">
-                <h3 className="info-section-title">Update Your Information</h3>
-                <div className="info-actions-grid">
-                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('contact')}>
-                    <EditIcon fontSize="small" />
-                    <span>Contact Information</span>
-                  </button>
-                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('demographic')}>
-                    <EditIcon fontSize="small" />
-                    <span>Demographic Data</span>
-                  </button>
-                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('emergency')}>
-                    <EditIcon fontSize="small" />
-                    <span>Emergency Contact</span>
-                  </button>
-                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('names')}>
-                    <EditIcon fontSize="small" />
-                    <span>Names</span>
-                  </button>
-                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('preference')}>
-                    <EditIcon fontSize="small" />
-                    <span>User Preference</span>
-                  </button>
-                  <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('privacy')}>
-                    <EditIcon fontSize="small" />
-                    <span>Privacy Settings</span>
-                  </button>
-                </div>
-
-                {activePersonalEditor ? (
-                  <div className="contact-edit-panel">
-                    <p className="focus-hint">
-                      {activePersonalEditor === 'contact'
-                        ? 'Edit your contact information below, then save your changes.'
-                        : `Edit your ${activePersonalEditor === 'demographic' ? 'demographic data' : activePersonalEditor === 'emergency' ? 'emergency contact' : activePersonalEditor === 'names' ? 'name information' : activePersonalEditor === 'preference' ? 'user preference' : 'privacy settings'} below, then save your changes.`}
-                    </p>
-                    <div className="contact-edit-grid">
-                      {activePersonalEditor === 'contact' ? (
-                        <>
-                      <label className="contact-edit-field" htmlFor="contact-home-address">
-                        <span>Home Address</span>
-                        <input
-                          id="contact-home-address"
-                          type="text"
-                          value={contactEditForm.homeAddress}
-                          onChange={(event) => handleContactEditChange('homeAddress', event.target.value)}
-                        />
-                      </label>
-
-                      <label className="contact-edit-field" htmlFor="contact-mailing-address">
-                        <span>Mailing Address</span>
-                        <input
-                          id="contact-mailing-address"
-                          type="text"
-                          value={contactEditForm.mailingAddress}
-                          onChange={(event) => handleContactEditChange('mailingAddress', event.target.value)}
-                        />
-                      </label>
-
-                      <label className="contact-edit-field" htmlFor="contact-phone">
-                        <span>Preferred Phone</span>
-                        <input
-                          id="contact-phone"
-                          type="tel"
-                          value={contactEditForm.preferredPhone}
-                          onChange={(event) => handleContactEditChange('preferredPhone', event.target.value)}
-                        />
-                      </label>
-
-                      <label className="contact-edit-field" htmlFor="contact-email">
-                        <span>Preferred Email</span>
-                        <input
-                          id="contact-email"
-                          type="email"
-                          value={contactEditForm.preferredEmail}
-                          onChange={(event) => handleContactEditChange('preferredEmail', event.target.value)}
-                        />
-                      </label>
-                        </>
-                      ) : null}
-
-                      {activePersonalEditor === 'demographic' ? (
-                        <label className="contact-edit-field" htmlFor="contact-demographic-data">
-                          <span>Demographic Data</span>
-                          <input
-                            id="contact-demographic-data"
-                            type="text"
-                            value={contactEditForm.demographicData}
-                            onChange={(event) => handleContactEditChange('demographicData', event.target.value)}
-                          />
-                        </label>
-                      ) : null}
-
-                      {activePersonalEditor === 'emergency' ? (
-                        <label className="contact-edit-field" htmlFor="contact-emergency-contact">
-                          <span>Emergency Contact</span>
-                          <input
-                            id="contact-emergency-contact"
-                            type="text"
-                            value={contactEditForm.emergencyContact}
-                            onChange={(event) => handleContactEditChange('emergencyContact', event.target.value)}
-                          />
-                        </label>
-                      ) : null}
-
-                      {activePersonalEditor === 'names' ? (
-                        <label className="contact-edit-field" htmlFor="contact-names">
-                          <span>Names</span>
-                          <input
-                            id="contact-names"
-                            type="text"
-                            value={contactEditForm.names}
-                            onChange={(event) => handleContactEditChange('names', event.target.value)}
-                          />
-                        </label>
-                      ) : null}
-
-                      {activePersonalEditor === 'preference' ? (
-                        <label className="contact-edit-field" htmlFor="contact-user-preference">
-                          <span>User Preference</span>
-                          <input
-                            id="contact-user-preference"
-                            type="text"
-                            value={contactEditForm.userPreference}
-                            onChange={(event) => handleContactEditChange('userPreference', event.target.value)}
-                          />
-                        </label>
-                      ) : null}
-
-                      {activePersonalEditor === 'privacy' ? (
-                        <label className="contact-edit-field" htmlFor="contact-privacy-settings">
-                          <span>Privacy Settings</span>
-                          <input
-                            id="contact-privacy-settings"
-                            type="text"
-                            value={contactEditForm.privacySettings}
-                            onChange={(event) => handleContactEditChange('privacySettings', event.target.value)}
-                          />
-                        </label>
-                      ) : null}
-                    </div>
-
-                    <div className="contact-edit-actions">
-                      <button className="financial-aid-button" type="button" onClick={handleSaveContactInfo}>
-                        Save Changes
-                      </button>
-                      <button className="financial-aid-cancel-btn" type="button" onClick={() => setActivePersonalEditor(null)}>
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-              </article>
-            </section>
           </>
         ) : page === 'financialAid' ? (
           <>
@@ -1293,7 +1082,7 @@ function App() {
               </div>
             </section>
 
-            <section className="card">
+            <section className="card finance-priority">
               <div className="card-title-row">
                 <AttachMoneyIcon />
                 <h2>Award Package</h2>
@@ -1431,7 +1220,7 @@ function App() {
               </div>
             </section>
           </>
-        ) : (
+        ) : page === 'planner' ? (
           <>
             <section className="hero-card card">
               <p className="eyebrow">Francisco&apos;s Student Center</p>
@@ -1482,7 +1271,7 @@ function App() {
                 </div>
               </article>
 
-              <article className="card finance-priority">
+              <article className="card new-class-priority">
                 <div className="card-title-row">
                   <AddCircleOutlineIcon />
                   <h2>Add New Class</h2>
@@ -1577,7 +1366,305 @@ function App() {
               )}
             </section>
           </>
-        )}
+        ) : page === 'personal-info' ? (
+          <>
+          <section className="hero-card card">
+              <p className="eyebrow">User Settings</p>
+              <h1>Personal Info</h1>
+              <h2>View your personal information</h2>
+              <div className="status-row">
+                <button className="status-pill warning status-pill-button" type="button" onClick={() => setPage('dashboard')}>
+                  <ArrowBackIcon fontSize="small" /> Back to Dashboard
+                </button>
+              </div>
+            </section>
+            
+            <section className="dashboard">
+              {activePersonalEditor ? (
+                <div className="modal-overlay" onClick={() => setActivePersonalEditor(null)}>
+                  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                    
+                    <div className="modal-header">
+                      <h3>
+                        {activePersonalEditor === 'contact'
+                          ? 'Edit Contact Information'
+                          : activePersonalEditor === 'demographic'
+                          ? 'Edit Demographic Data'
+                          : activePersonalEditor === 'emergency'
+                          ? 'Edit Emergency Contact'
+                          : activePersonalEditor === 'names'
+                          ? 'Edit Names'
+                          : activePersonalEditor === 'preference'
+                          ? 'Edit User Preference'
+                          : 'Edit Privacy Settings'}
+                      </h3>
+
+                      <button
+                        className="modal-close-btn"
+                        onClick={() => setActivePersonalEditor(null)}
+                      >
+                        X
+                      </button>
+                    </div>
+
+                    <p className="focus-hint">
+                      {activePersonalEditor === 'contact'
+                        ? 'Edit your contact information below, then save your changes.'
+                        : 'Update your information below, then save your changes.'}
+                    </p>
+                    <div className="contact-edit-grid">
+                      {activePersonalEditor === 'contact' ? (
+                        <>
+                      <label className="contact-edit-field" htmlFor="contact-home-address">
+                        <span>Home Address</span>
+                        <input
+                          id="contact-home-address"
+                          type="text"
+                          value={contactEditForm.homeAddress}
+                          onChange={(event) => handleContactEditChange('homeAddress', event.target.value)}
+                        />
+                      </label>
+
+                      <label className="contact-edit-field" htmlFor="contact-mailing-address">
+                        <span>Mailing Address</span>
+                        <input
+                          id="contact-mailing-address"
+                          type="text"
+                          value={contactEditForm.mailingAddress}
+                          onChange={(event) => handleContactEditChange('mailingAddress', event.target.value)}
+                        />
+                      </label>
+
+                      <label className="contact-edit-field" htmlFor="contact-phone">
+                        <span>Preferred Phone</span>
+                        <input
+                          id="contact-phone"
+                          type="tel"
+                          value={contactEditForm.preferredPhone}
+                          onChange={(event) => handleContactEditChange('preferredPhone', event.target.value)}
+                        />
+                      </label>
+
+                      <label className="contact-edit-field" htmlFor="contact-email">
+                        <span>Preferred Email</span>
+                        <input
+                          id="contact-email"
+                          type="email"
+                          value={contactEditForm.preferredEmail}
+                          onChange={(event) => handleContactEditChange('preferredEmail', event.target.value)}
+                        />
+                      </label>
+                        </>
+                      ) : null}
+
+                      {activePersonalEditor === 'demographic' ? (
+                        <label className="contact-edit-field" htmlFor="contact-demographic-data">
+                          <span>Demographic Data</span>
+                          <input
+                            id="contact-demographic-data"
+                            type="text"
+                            value={contactEditForm.demographicData}
+                            onChange={(event) => handleContactEditChange('demographicData', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+
+                      {activePersonalEditor === 'emergency' ? (
+                        <label className="contact-edit-field" htmlFor="contact-emergency-contact">
+                          <span>Emergency Contact</span>
+                          <input
+                            id="contact-emergency-contact"
+                            type="text"
+                            value={contactEditForm.emergencyContact}
+                            onChange={(event) => handleContactEditChange('emergencyContact', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+
+                      {activePersonalEditor === 'names' ? (
+                        <label className="contact-edit-field" htmlFor="contact-names">
+                          <span>Names</span>
+                          <input
+                            id="contact-names"
+                            type="text"
+                            value={contactEditForm.names}
+                            onChange={(event) => handleContactEditChange('names', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+
+                      {activePersonalEditor === 'preference' ? (
+                        <label className="contact-edit-field" htmlFor="contact-user-preference">
+                          <span>User Preference</span>
+                          <input
+                            id="contact-user-preference"
+                            type="text"
+                            value={contactEditForm.userPreference}
+                            onChange={(event) => handleContactEditChange('userPreference', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+
+                      {activePersonalEditor === 'privacy' ? (
+                        <label className="contact-edit-field" htmlFor="contact-privacy-settings">
+                          <span>Privacy Settings</span>
+                          <input
+                            id="contact-privacy-settings"
+                            type="text"
+                            value={contactEditForm.privacySettings}
+                            onChange={(event) => handleContactEditChange('privacySettings', event.target.value)}
+                          />
+                        </label>
+                      ) : null}
+                    </div>
+
+                    <div className="contact-edit-actions">
+                      <button className="financial-aid-button" type="button" onClick={handleSaveContactInfo}>
+                        Save Changes
+                      </button>
+                      <button className="financial-aid-cancel-btn" type="button" onClick={() => setActivePersonalEditor(null)}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              <article className="card personal-info-priority">
+                <div className="card-title-row">
+                  <PersonIcon />
+                  <h2>Personal Information</h2>
+                </div>
+
+                <div className="personal-info-content">
+                  <div className="info-display-section">
+                    <h3 className="info-section-title">Contact Information</h3>
+                    <div className="info-display-grid">
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <HomeIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">Home Address</p>
+                        <p className="info-value">{personalInfo.homeAddress}</p>
+                      </div>
+                    </div>
+
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <HomeIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">Mailing Address</p>
+                        <p className="info-value">{personalInfo.mailingAddress}</p>
+                      </div>
+                    </div>
+
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <PhoneIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">Preferred Phone</p>
+                        <p className="info-value">{personalInfo.preferredPhone}</p>
+                      </div>
+                    </div>
+
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <EmailIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">Preferred Email</p>
+                        <p className="info-value">{personalInfo.preferredEmail}</p>
+                      </div>
+                    </div>
+
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <PersonIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">Names</p>
+                        <p className="info-value">{personalInfo.names}</p>
+                      </div>
+                    </div>
+
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <PersonIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">Demographic Data</p>
+                        <p className="info-value">{personalInfo.demographicData}</p>
+                      </div>
+                    </div>
+
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <PhoneIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">Emergency Contact</p>
+                        <p className="info-value">{personalInfo.emergencyContact}</p>
+                      </div>
+                    </div>
+
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <EditIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">User Preference</p>
+                        <p className="info-value">{personalInfo.userPreference}</p>
+                      </div>
+                    </div>
+
+                    <div className="info-item">
+                      <div className="info-icon">
+                        <EditIcon fontSize="small" />
+                      </div>
+                      <div className="info-details">
+                        <p className="info-label">Privacy Settings</p>
+                        <p className="info-value">{personalInfo.privacySettings}</p>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+
+                  <div className="info-actions-section">
+                    <h3 className="info-section-title">Update Your Information</h3>
+                    <div className="info-actions-grid">
+                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('contact')}>
+                        <EditIcon fontSize="small" />
+                        <span>Contact Information</span>
+                      </button>
+                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('demographic')}>
+                        <EditIcon fontSize="small" />
+                        <span>Demographic Data</span>
+                      </button>
+                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('emergency')}>
+                        <EditIcon fontSize="small" />
+                        <span>Emergency Contact</span>
+                      </button>
+                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('names')}>
+                        <EditIcon fontSize="small" />
+                        <span>Names</span>
+                      </button>
+                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('preference')}>
+                        <EditIcon fontSize="small" />
+                        <span>User Preference</span>
+                      </button>
+                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('privacy')}>
+                        <EditIcon fontSize="small" />
+                        <span>Privacy Settings</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </section>
+          </>
+        ) : null}
       </main>
     </div>
   );
