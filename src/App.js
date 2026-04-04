@@ -1256,7 +1256,7 @@ function App() {
                   type="button"
                   onClick={() => setPage('dashboard')}
                 >
-                  Back
+                  Back <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                 </button>
               </div>
             </section>
