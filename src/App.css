@@ -481,9 +481,8 @@ h3 {
   border-top: 4px solid #2b95b6;
 }
 
-
 .new-class-priority {
-  border-top: 4px solid var(--csulb-black);
+  border-top: 4px solid #027a48;
 }
 
 .finance-priority {
@@ -499,7 +498,7 @@ h3 {
 }
 
 .resources-priority {
-  border-top: 4px solid #555;
+  border-top: 4px solid #8725b4;
 }
 
 .personal-info-priority {
@@ -811,7 +810,7 @@ h3 {
 
 .priority-checklist-box {
   border: 1px solid var(--line);
-  border-top: 4px solid var(--csulb-black);
+  border-top: 4px solid rgb(221, 42, 42);
   border-radius: 12px;
   padding: 0.95rem;
   background: linear-gradient(165deg, #fffefc, #f3f6fa);
@@ -1089,7 +1088,7 @@ h3 {
 
 .personal-info-content {
   display: grid;
-  grid-template-rows: auto auto;
+  grid-template-columns: 2fr 1fr;
   gap: 2rem;
 }
 
