@@ -594,10 +594,15 @@ function App() {
   return (
     <div className="student-center-app">
       <header className="topbar">
-        <button className="icon-button" type="button" aria-label="Open navigation menu" onClick={() => {
-          setSidebarOpen(true);
-          setIsClosing(false);
-        }}>
+        <button
+          className="icon-button"
+          type="button"
+          aria-label="Open navigation menu"
+          onClick={() => {
+            setSidebarOpen(true);
+            setIsClosing(false);
+          }}
+        >
           <MenuIcon className="topbar-icon" />
         </button>
         <img src={logo} className="csulb-logo" alt="CSULB logo" />
@@ -606,7 +611,7 @@ function App() {
             className="icon-button"
             type="button"
             aria-label="Open account menu"
-            onClick={() => setShowProfileMenu(prev => !prev)}
+            onClick={() => setShowProfileMenu((prev) => !prev)}
           >
             <AccountCircleIcon className="topbar-icon" />
           </button>
@@ -618,16 +623,16 @@ function App() {
                 <span>Student</span>
               </div>
 
-              <button onClick={() => {
-                setPage('personal-info');
-                setShowProfileMenu(false);
-              }}>
+              <button
+                onClick={() => {
+                  setPage("personal-info");
+                  setShowProfileMenu(false);
+                }}
+              >
                 Personal Information
               </button>
 
-              <button className="logout">
-                Logout
-              </button>
+              <button className="logout">Logout</button>
             </div>
           )}
         </div>
@@ -636,43 +641,76 @@ function App() {
       {(sidebarOpen || isClosing) && (
         <div className="sidebar-overlay" onClick={closeSidebar}>
           <aside
-            className={`sidebar ${isClosing ? 'closing' : ''}`}
+            className={`sidebar ${isClosing ? "closing" : ""}`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="sidebar-header">
               <h2>Navigation</h2>
-              <button className="icon-button sidebar-close" onClick={closeSidebar}>
-                <CloseIcon sx={{ color: 'black' }}/>
+              <button
+                className="icon-button sidebar-close"
+                onClick={closeSidebar}
+              >
+                <CloseIcon sx={{ color: "black" }} />
               </button>
             </div>
 
             <nav className="sidebar-nav">
               <button
-                className={`sidebar-link ${page === 'dashboard' ? 'active' : ''}`}
-                onClick={() => { setPage('dashboard'); setSidebarOpen(false); }}
+                className={`sidebar-link ${page === "dashboard" ? "active" : ""}`}
+                onClick={() => {
+                  setPage("dashboard");
+                  setSidebarOpen(false);
+                }}
               >
-                <DashboardIcon fontSize="small" /> Dashboard <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                <DashboardIcon fontSize="small" /> Dashboard{" "}
+                <ArrowForwardIosIcon
+                  className="button-arrow"
+                  fontSize="inherit"
+                />
               </button>
 
               <button
-                className={`sidebar-link ${page === 'planner' ? 'active' : ''}`}
-                onClick={() => { setPage('planner'); setSidebarOpen(false); }}
+                className={`sidebar-link ${page === "planner" ? "active" : ""}`}
+                onClick={() => {
+                  setPage("planner");
+                  setSidebarOpen(false);
+                }}
               >
-                <SchoolIcon fontSize="small" /> Class Planner <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                <SchoolIcon fontSize="small" /> Class Planner{" "}
+                <ArrowForwardIosIcon
+                  className="button-arrow"
+                  fontSize="inherit"
+                />
               </button>
 
               <button
-                className={`sidebar-link ${page === 'financialAid' ? 'active' : ''}`}
-                onClick={() => { setPage('financialAid'); setSidebarOpen(false); }}
+                className={`sidebar-link ${page === "financialAid" ? "active" : ""}`}
+                onClick={() => {
+                  setPage("financialAid");
+                  setSidebarOpen(false);
+                }}
               >
-                <AttachMoneyIcon fontSize="small" />Financial Aid <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                <AttachMoneyIcon fontSize="small" />
+                Financial Aid{" "}
+                <ArrowForwardIosIcon
+                  className="button-arrow"
+                  fontSize="inherit"
+                />
               </button>
 
               <button
-                className={`sidebar-link ${page === 'personal-info' ? 'active' : ''}`}
-                onClick={() => { setPage('personal-info'); setSidebarOpen(false); }}
+                className={`sidebar-link ${page === "personal-info" ? "active" : ""}`}
+                onClick={() => {
+                  setPage("personal-info");
+                  setSidebarOpen(false);
+                }}
               >
-                <AccountCircleIcon fontSize="small" />Personal Info <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                <AccountCircleIcon fontSize="small" />
+                Personal Info{" "}
+                <ArrowForwardIosIcon
+                  className="button-arrow"
+                  fontSize="inherit"
+                />
               </button>
             </nav>
           </aside>
@@ -681,9 +719,17 @@ function App() {
 
       <main className="dashboard">
         {notice ? (
-          <section className={`csulb-notice ${notice.type}`} role="status" aria-live="polite">
+          <section
+            className={`csulb-notice ${notice.type}`}
+            role="status"
+            aria-live="polite"
+          >
             <div className="notice-title-row">
-              {notice.type === 'success' ? <CheckCircleIcon fontSize="small" /> : <ReportProblemIcon fontSize="small" />}
+              {notice.type === "success" ? (
+                <CheckCircleIcon fontSize="small" />
+              ) : (
+                <ReportProblemIcon fontSize="small" />
+              )}
               <strong>CSULB Student Center Notification</strong>
               <button
                 type="button"
@@ -698,17 +744,25 @@ function App() {
           </section>
         ) : null}
 
-        {page === 'dashboard' ? (
+        {page === "dashboard" ? (
           <>
             <section className="grid-main-side hero-row">
               <section className="hero-card card">
-                <p className="eyebrow">Francisco&apos;s Student Center</p>
-                <h1>Welcome back, Francisco</h1>
-                <h2>Undergraduate Student in Computer Science</h2>
-                <div className="status-row">
-                  <button className="status-pill warning status-pill-button important-alert-button" type="button">
-                    <WarningAmberIcon fontSize="small" /> View Important Alerts
-                  </button>
+                <h1 style={{ fontSize: "1.6rem", marginBottom: "0.9rem" }}>
+                  Francisco&apos;s Student Center
+                </h1>
+
+                <div className="inbox-list">
+                  <div className="inbox-item inbox-item--warning">
+                    <WarningAmberIcon fontSize="small" className="inbox-icon" />
+                    <div className="inbox-body">
+                      <p className="inbox-title">View My Inbox</p>
+                      <p className="inbox-desc">
+                        You have unread notices requiring your attention.
+                      </p>
+                    </div>
+                    <span className="inbox-badge">10</span>
+                  </div>
                 </div>
               </section>
 
@@ -717,14 +771,31 @@ function App() {
                   <EventNoteIcon />
                   <h2>Priority Checklist</h2>
                 </div>
-                <p className="section-subtitle">What needs attention right now.</p>
+                <p className="section-subtitle">
+                  What needs attention right now.
+                </p>
                 <ul className="checklist">
-                  <li><strong>Spring 2026 Enrollment:</strong> April 1, 2026 - August 15, 2026</li>
-                  <li><strong>Summer 2026 Enrollment: </strong>February 10, 2026 - June 1, 2026</li>
-                  <li><strong>Fall 2026 Enrollment: </strong>June 3, 2026 - December 20, 2026</li>
-                  <li><strong>To Do:</strong> No items</li>
-                  <li><strong>Admissions:</strong> No pending applications</li>
-                  <li><strong>Financial Aid:</strong> Ready to review awards</li>
+                  <li>
+                    <strong>Spring 2026 Enrollment:</strong> April 1, 2026 -
+                    August 15, 2026
+                  </li>
+                  <li>
+                    <strong>Summer 2026 Enrollment:</strong> February 10, 2026 -
+                    June 1, 2026
+                  </li>
+                  <li>
+                    <strong>Fall 2026 Enrollment:</strong> June 3, 2026 -
+                    December 20, 2026
+                  </li>
+                  <li>
+                    <strong>To Do:</strong> No items
+                  </li>
+                  <li>
+                    <strong>Admissions:</strong> No pending applications
+                  </li>
+                  <li>
+                    <strong>Financial Aid:</strong> Ready to review awards
+                  </li>
                 </ul>
               </article>
             </section>
@@ -734,43 +805,48 @@ function App() {
                 <div className="card-title-row">
                   <SchoolIcon />
                   <h2>Academics</h2>
-                  <select className="schedule-term-select" defaultValue="Spring 2026">
+                  <select
+                    className="schedule-term-select"
+                    defaultValue="Spring 2026"
+                  >
                     <option>Spring 2026</option>
                     <option>Summer 2026</option>
                     <option>Fall 2026</option>
                   </select>
                   <div className="tabs">
                     <button
-                      className={`tab-button ${scheduleTab === 'schedule' ? 'active' : ''}`}
-                      onClick={() => setScheduleTab('schedule')}
+                      className={`tab-button ${scheduleTab === "schedule" ? "active" : ""}`}
+                      onClick={() => setScheduleTab("schedule")}
                     >
                       Weekly Schedule
                     </button>
 
                     <button
-                      className={`tab-button ${scheduleTab === 'grades' ? 'active' : ''}`}
-                      onClick={() => setScheduleTab('grades')}
+                      className={`tab-button ${scheduleTab === "grades" ? "active" : ""}`}
+                      onClick={() => setScheduleTab("grades")}
                     >
                       Grades
                     </button>
 
                     <button
-                      className={`tab-button ${scheduleTab === 'finals' ? 'active' : ''}`}
-                      onClick={() => setScheduleTab('finals')}
+                      className={`tab-button ${scheduleTab === "finals" ? "active" : ""}`}
+                      onClick={() => setScheduleTab("finals")}
                     >
                       Final Exam Schedule
                     </button>
                   </div>
                 </div>
                 <div className="schedule-content-box">
-                  {scheduleTab === 'schedule' ? (
+                  {scheduleTab === "schedule" ? (
                     <>
                       <div className="schedule-header">
                         <span className="focus-hint">
                           Your classes for this term.
                         </span>
                         <div className="schedule-toggle">
-                          <span className={`toggle-label ${!scheduleMode ? 'active' : ''}`}>
+                          <span
+                            className={`toggle-label ${!scheduleMode ? "active" : ""}`}
+                          >
                             Calendar
                           </span>
 
@@ -778,20 +854,25 @@ function App() {
                             <input
                               type="checkbox"
                               checked={scheduleMode}
-                              onChange={() => setScheduleMode(prev => !prev)}
+                              onChange={() => setScheduleMode((prev) => !prev)}
                             />
                             <span className="slider"></span>
                           </label>
 
-                          <span className={`toggle-label ${scheduleMode ? 'active' : ''}`}>
+                          <span
+                            className={`toggle-label ${scheduleMode ? "active" : ""}`}
+                          >
                             List
                           </span>
                         </div>
                       </div>
-                      
+
                       {scheduleMode === false ? (
                         <>
-                          <div className="calendar-view" aria-label="Weekly calendar view">
+                          <div
+                            className="calendar-view"
+                            aria-label="Weekly calendar view"
+                          >
                             {calendarDays.map((day) => (
                               <div className="calendar-day" key={day}>
                                 <h3>{day}</h3>
@@ -800,7 +881,11 @@ function App() {
                                     scheduleByDay[day].map((item) => (
                                       <li key={`${item.course}-${day}`}>
                                         <strong>{item.course}</strong>
-                                        <span>{item.meeting.replace('MoWe ', '').replace('TuTh ', '')}</span>
+                                        <span>
+                                          {item.meeting
+                                            .replace("MoWe ", "")
+                                            .replace("TuTh ", "")}
+                                        </span>
                                         <span>{item.room}</span>
                                       </li>
                                     ))
@@ -814,27 +899,45 @@ function App() {
                         </>
                       ) : scheduleMode === true ? (
                         <>
-                          <div className="schedule-toolbar" role="group" aria-label="Schedule controls">
-                            <label className="schedule-control" htmlFor="schedule-sort-select">
-                              <span><AccessTimeIcon fontSize="small" /> Sort By</span>
+                          <div
+                            className="schedule-toolbar"
+                            role="group"
+                            aria-label="Schedule controls"
+                          >
+                            <label
+                              className="schedule-control"
+                              htmlFor="schedule-sort-select"
+                            >
+                              <span>
+                                <AccessTimeIcon fontSize="small" /> Sort By
+                              </span>
                               <select
                                 id="schedule-sort-select"
                                 className="schedule-control-select"
                                 value={scheduleSort}
-                                onChange={(event) => setScheduleSort(event.target.value)}
+                                onChange={(event) =>
+                                  setScheduleSort(event.target.value)
+                                }
                               >
                                 <option value="date">Date/Time</option>
                                 <option value="name">Course Name</option>
                                 <option value="room">Room</option>
                               </select>
                             </label>
-                            <label className="schedule-control" htmlFor="schedule-day-filter-select">
-                              <span><FilterAltIcon fontSize="small" /> Day Filter</span>
+                            <label
+                              className="schedule-control"
+                              htmlFor="schedule-day-filter-select"
+                            >
+                              <span>
+                                <FilterAltIcon fontSize="small" /> Day Filter
+                              </span>
                               <select
                                 id="schedule-day-filter-select"
                                 className="schedule-control-select"
                                 value={scheduleDayFilter}
-                                onChange={(event) => setScheduleDayFilter(event.target.value)}
+                                onChange={(event) =>
+                                  setScheduleDayFilter(event.target.value)
+                                }
                               >
                                 <option value="all">All Days</option>
                                 <option value="mw">Mon/Wed</option>
@@ -858,9 +961,11 @@ function App() {
                         </>
                       ) : null}
                     </>
-                  ) : scheduleTab === 'grades' ? (
+                  ) : scheduleTab === "grades" ? (
                     <>
-                      <p className="focus-hint">Your current grades for this term.</p>
+                      <p className="focus-hint">
+                        Your current grades for this term.
+                      </p>
 
                       <table className="grades-table">
                         <thead>
@@ -891,9 +996,11 @@ function App() {
                         </tbody>
                       </table>
                     </>
-                  ) : scheduleTab === 'finals' ? (
+                  ) : scheduleTab === "finals" ? (
                     <>
-                      <p className="focus-hint">Your final exam schedule for this term.</p>
+                      <p className="focus-hint">
+                        Your final exam schedule for this term.
+                      </p>
 
                       <div className="calendar-view">
                         {calendarDays.map((day) => (
@@ -915,7 +1022,7 @@ function App() {
                           </div>
                         ))}
                       </div>
-                      <h3 style={{ marginTop: '2rem' }}>Final Exam Schedule</h3>
+                      <h3 style={{ marginTop: "2rem" }}>Final Exam Schedule</h3>
                       <table className="exam-table">
                         <thead>
                           <tr>
@@ -941,8 +1048,16 @@ function App() {
                 </div>
                 <div className="academic-actions-grid">
                   {academicsActions.map((action) => (
-                    <button key={action} className="action-button" type="button">
-                      {action} <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    <button
+                      key={action}
+                      className="action-button"
+                      type="button"
+                    >
+                      {action}{" "}
+                      <ArrowForwardIosIcon
+                        className="button-arrow"
+                        fontSize="inherit"
+                      />
                     </button>
                   ))}
                 </div>
@@ -952,17 +1067,22 @@ function App() {
                 <article className="card stack finance-priority">
                   <div>
                     <div className="card-title-row">
-                      <AttachMoneyIcon className="finances-icon"/>
+                      <AttachMoneyIcon className="finances-icon" />
                       <h2>Finances</h2>
                     </div>
-                    <p className="section-subtitle">Your account and aid summary.</p>
+                    <p className="section-subtitle">
+                      Your account and aid summary.
+                    </p>
                     <span className="status-pill good">
-                      <AttachMoneyIcon fontSize="small" /> No Outstanding Charges
+                      <AttachMoneyIcon fontSize="small" /> No Outstanding
+                      Charges
                     </span>
                     <div className="metric-row side-metrics">
                       <div>
                         <p className="metric-label">Outstanding Charges</p>
-                        <p className="metric-value">${outstandingCharges.toFixed(2)}</p>
+                        <p className="metric-value">
+                          ${outstandingCharges.toFixed(2)}
+                        </p>
                       </div>
                       <div>
                         <p className="metric-label">Financial Aid Estimate</p>
@@ -984,22 +1104,43 @@ function App() {
                     <button className="financial-aid-button" type="button" onClick={handleViewFinancialDetails}>
                       View Financial Details <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                     </button>
-                    <button className="financial-aid-button" type="button" onClick={() => setPage('financialAid')}>
-                      Accept/Decline Award Package <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    <button
+                      className="financial-aid-button"
+                      type="button"
+                      onClick={() => setPage("financialAid")}
+                    >
+                      Accept/Decline Award Package{" "}
+                      <ArrowForwardIosIcon
+                        className="button-arrow"
+                        fontSize="inherit"
+                      />
                     </button>
-                    <button className="financial-aid-button" type="button" onClick={handleMakePayment} disabled={!canMakePayment}>
-                      Make a Payment <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    <button
+                      className="financial-aid-button"
+                      type="button"
+                      onClick={handleMakePayment}
+                      disabled={!canMakePayment}
+                    >
+                      Make a Payment{" "}
+                      <ArrowForwardIosIcon
+                        className="button-arrow"
+                        fontSize="inherit"
+                      />
                     </button>
                     <button className="financial-aid-button" type="button">
-                      View 1098-T <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                      View 1098-T{" "}
+                      <ArrowForwardIosIcon
+                        className="button-arrow"
+                        fontSize="inherit"
+                      />
                     </button>
                   </div>
-              </article>
+                </article>
 
                 <article className="card stack enrollment-priority">
                   <div>
                     <div className="card-title-row">
-                      <SchoolIcon className="finances-icon"/>
+                      <SchoolIcon className="finances-icon" />
                       <h2>Enrollment</h2>
                     </div>
                       <p className="section-subtitle">Your enrollment status and deadlines.</p>
@@ -1056,7 +1197,6 @@ function App() {
                   </div>
                 </article>
               </div>
-              
             </section>
 
             <section className="grid-two">
@@ -1078,13 +1218,23 @@ function App() {
                 />
                 <div className="actions-grid">
                   {filteredQuickActions.map((action) => (
-                    <button key={action} className="action-button" type="button">
-                      {action} <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
+                    <button
+                      key={action}
+                      className="action-button"
+                      type="button"
+                    >
+                      {action}{" "}
+                      <ArrowForwardIosIcon
+                        className="button-arrow"
+                        fontSize="inherit"
+                      />
                     </button>
                   ))}
                 </div>
                 {filteredQuickActions.length === 0 ? (
-                  <p className="focus-hint">No matches. Try a broader keyword.</p>
+                  <p className="focus-hint">
+                    No matches. Try a broader keyword.
+                  </p>
                 ) : null}
               </article>
 
@@ -1096,7 +1246,11 @@ function App() {
                 <ul className="resource-list">
                   {resources.map((item) => (
                     <li key={item.label}>
-                      <a href={item.href} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {item.label}
                       </a>
                     </li>
@@ -1105,7 +1259,7 @@ function App() {
               </article>
             </section>
           </>
-        ) : page === 'financialAid' ? (
+        ) : page === "financialAid" ? (
           <>
             <section className="hero-card card">
               <p className="eyebrow">Financial Aid</p>
@@ -1116,7 +1270,7 @@ function App() {
                 <button
                   className="status-pill warning status-pill-button"
                   type="button"
-                  onClick={() => setPage('dashboard')}
+                  onClick={() => setPage("dashboard")}
                 >
                   <ArrowBackIcon fontSize="small" /> Back to Dashboard
                 </button>
@@ -1154,15 +1308,15 @@ function App() {
                     <td>
                       <input
                         type="checkbox"
-                        checked={aidSelections.pell === 'accept'}
-                        onChange={() => handleAidChange('pell', 'accept')}
+                        checked={aidSelections.pell === "accept"}
+                        onChange={() => handleAidChange("pell", "accept")}
                       />
                     </td>
                     <td>
                       <input
                         type="checkbox"
-                        checked={aidSelections.pell === 'decline'}
-                        onChange={() => handleAidChange('pell', 'decline')}
+                        checked={aidSelections.pell === "decline"}
+                        onChange={() => handleAidChange("pell", "decline")}
                       />
                     </td>
                     <td>4/1/26</td>
@@ -1175,15 +1329,15 @@ function App() {
                     <td>
                       <input
                         type="checkbox"
-                        checked={aidSelections.calGrant === 'accept'}
-                        onChange={() => handleAidChange('calGrant', 'accept')}
+                        checked={aidSelections.calGrant === "accept"}
+                        onChange={() => handleAidChange("calGrant", "accept")}
                       />
                     </td>
                     <td>
                       <input
                         type="checkbox"
-                        checked={aidSelections.calGrant === 'decline'}
-                        onChange={() => handleAidChange('calGrant', 'decline')}
+                        checked={aidSelections.calGrant === "decline"}
+                        onChange={() => handleAidChange("calGrant", "decline")}
                       />
                     </td>
                     <td>4/1/26</td>
@@ -1196,15 +1350,15 @@ function App() {
                     <td>
                       <input
                         type="checkbox"
-                        checked={aidSelections.loanA === 'accept'}
-                        onChange={() => handleAidChange('loanA', 'accept')}
+                        checked={aidSelections.loanA === "accept"}
+                        onChange={() => handleAidChange("loanA", "accept")}
                       />
                     </td>
                     <td>
                       <input
                         type="checkbox"
-                        checked={aidSelections.loanA === 'decline'}
-                        onChange={() => handleAidChange('loanA', 'decline')}
+                        checked={aidSelections.loanA === "decline"}
+                        onChange={() => handleAidChange("loanA", "decline")}
                       />
                     </td>
                     <td></td>
@@ -1217,32 +1371,35 @@ function App() {
                     <td>
                       <input
                         type="checkbox"
-                        checked={aidSelections.loanB === 'accept'}
-                        onChange={() => handleAidChange('loanB', 'accept')}
+                        checked={aidSelections.loanB === "accept"}
+                        onChange={() => handleAidChange("loanB", "accept")}
                       />
                     </td>
                     <td>
                       <input
                         type="checkbox"
-                        checked={aidSelections.loanB === 'decline'}
-                        onChange={() => handleAidChange('loanB', 'decline')}
+                        checked={aidSelections.loanB === "decline"}
+                        onChange={() => handleAidChange("loanB", "decline")}
                       />
                     </td>
                     <td></td>
                   </tr>
                   <tr className="total-aid">
-                      <td>Total:</td>
-                      <td></td>
-                      <td>$4850.00</td>
-                      <td>$4850.00</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                    <td>Total:</td>
+                    <td></td>
+                    <td>$4850.00</td>
+                    <td>$4850.00</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
 
-              <div className="financial-aid-btn-container" style={{ marginTop: '1rem', display: 'flex', gap: '1rem' }}>
+              <div
+                className="financial-aid-btn-container"
+                style={{ marginTop: "1rem", display: "flex", gap: "1rem" }}
+              >
                 <button
                   className="financial-aid-submit-btn"
                   type="button"
@@ -1254,21 +1411,28 @@ function App() {
                 <button
                   className="financial-aid-cancel-btn"
                   type="button"
-                  onClick={() => setPage('dashboard')}
+                  onClick={() => setPage("dashboard")}
                 >
                   Back <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                 </button>
               </div>
             </section>
           </>
-        ) : page === 'planner' ? (
+        ) : page === "planner" ? (
           <>
             <section className="hero-card card">
               <p className="eyebrow">Francisco&apos;s Student Center</p>
               <h1>Class Planner</h1>
-              <h2>Plan classes first, then submit enrollment when your window opens</h2>
+              <h2>
+                Plan classes first, then submit enrollment when your window
+                opens
+              </h2>
               <div className="status-row">
-                <button className="status-pill warning status-pill-button" type="button" onClick={() => setPage('dashboard')}>
+                <button
+                  className="status-pill warning status-pill-button"
+                  type="button"
+                  onClick={() => setPage("dashboard")}
+                >
                   <ArrowBackIcon fontSize="small" /> Back to Dashboard
                 </button>
               </div>
@@ -1289,13 +1453,19 @@ function App() {
                 />
                 <div className="planner-list">
                   {visiblePlannerClasses.map((item) => {
-                    const inCart = enrollmentCart.some((cartItem) => cartItem.id === item.id);
+                    const inCart = enrollmentCart.some(
+                      (cartItem) => cartItem.id === item.id,
+                    );
                     return (
                       <div className="planner-item" key={item.id}>
                         <div>
-                          <h3>{item.code} - {item.title}</h3>
+                          <h3>
+                            {item.code} - {item.title}
+                          </h3>
                           <p>{item.meeting}</p>
-                          <span>{item.room} | {item.units} Units</span>
+                          <span>
+                            {item.room} | {item.units} Units
+                          </span>
                         </div>
                         <button
                           className="financial-aid-button planner-add-button"
@@ -1317,49 +1487,74 @@ function App() {
                   <AddCircleOutlineIcon />
                   <h2>Add New Class</h2>
                 </div>
-                <p className="section-subtitle">Create a custom class option before adding it to your cart.</p>
+                <p className="section-subtitle">
+                  Create a custom class option before adding it to your cart.
+                </p>
                 <div className="planner-form-grid">
-                  <label className="personal-info-field" htmlFor="new-class-code">
+                  <label
+                    className="personal-info-field"
+                    htmlFor="new-class-code"
+                  >
                     <span>Course Code: </span>
                     <input
                       id="new-class-code"
                       type="text"
                       value={newClassForm.code}
-                      onChange={(event) => handleNewClassFormChange('code', event.target.value)}
+                      onChange={(event) =>
+                        handleNewClassFormChange("code", event.target.value)
+                      }
                       placeholder="e.g. CECS 499-01"
                     />
                   </label>
-                  <label className="personal-info-field" htmlFor="new-class-title">
+                  <label
+                    className="personal-info-field"
+                    htmlFor="new-class-title"
+                  >
                     <span>Course Title: </span>
                     <input
                       id="new-class-title"
                       type="text"
                       value={newClassForm.title}
-                      onChange={(event) => handleNewClassFormChange('title', event.target.value)}
+                      onChange={(event) =>
+                        handleNewClassFormChange("title", event.target.value)
+                      }
                       placeholder="e.g. Special Topics"
                     />
                   </label>
-                  <label className="personal-info-field" htmlFor="new-class-meeting">
+                  <label
+                    className="personal-info-field"
+                    htmlFor="new-class-meeting"
+                  >
                     <span>Meeting Time: </span>
                     <input
                       id="new-class-meeting"
                       type="text"
                       value={newClassForm.meeting}
-                      onChange={(event) => handleNewClassFormChange('meeting', event.target.value)}
+                      onChange={(event) =>
+                        handleNewClassFormChange("meeting", event.target.value)
+                      }
                       placeholder="e.g. TuTh 5:00 PM - 6:15 PM"
                     />
                   </label>
-                  <label className="personal-info-field" htmlFor="new-class-room">
+                  <label
+                    className="personal-info-field"
+                    htmlFor="new-class-room"
+                  >
                     <span>Room: </span>
                     <input
                       id="new-class-room"
                       type="text"
                       value={newClassForm.room}
-                      onChange={(event) => handleNewClassFormChange('room', event.target.value)}
+                      onChange={(event) =>
+                        handleNewClassFormChange("room", event.target.value)
+                      }
                       placeholder="e.g. ECS Room 211"
                     />
                   </label>
-                  <label className="personal-info-field" htmlFor="new-class-units">
+                  <label
+                    className="personal-info-field"
+                    htmlFor="new-class-units"
+                  >
                     <span>Units: </span>
                     <input
                       id="new-class-units"
@@ -1367,11 +1562,17 @@ function App() {
                       min="1"
                       max="6"
                       value={newClassForm.units}
-                      onChange={(event) => handleNewClassFormChange('units', event.target.value)}
+                      onChange={(event) =>
+                        handleNewClassFormChange("units", event.target.value)
+                      }
                     />
                   </label>
                 </div>
-                <button className="financial-aid-button" type="button" onClick={handleCreateNewClass}>
+                <button
+                  className="financial-aid-button"
+                  type="button"
+                  onClick={handleCreateNewClass}
+                >
                   <AddCircleOutlineIcon fontSize="small" /> Save New Class
                   <div className="spacer"></div>
                 </button>
@@ -1393,15 +1594,21 @@ function App() {
                 </button>
               </div>
               {enrollmentCart.length === 0 ? (
-                <p className="focus-hint">Your cart is empty. Add a class from the planner list.</p>
+                <p className="focus-hint">
+                  Your cart is empty. Add a class from the planner list.
+                </p>
               ) : (
                 <div className="planner-list">
                   {enrollmentCart.map((item) => (
                     <div className="planner-item" key={`cart-${item.id}`}>
                       <div>
-                        <h3>{item.code} - {item.title}</h3>
+                        <h3>
+                          {item.code} - {item.title}
+                        </h3>
                         <p>{item.meeting}</p>
-                        <span>{item.room} | {item.units} Units</span>
+                        <span>
+                          {item.room} | {item.units} Units
+                        </span>
                       </div>
                       <button
                         className="action-button planner-remove-button"
@@ -1416,37 +1623,46 @@ function App() {
               )}
             </section>
           </>
-        ) : page === 'personal-info' ? (
+        ) : page === "personal-info" ? (
           <>
-          <section className="hero-card card">
+            <section className="hero-card card">
               <p className="eyebrow">User Settings</p>
               <h1>Personal Info</h1>
               <h2>View your personal information</h2>
               <div className="status-row">
-                <button className="status-pill warning status-pill-button" type="button" onClick={() => setPage('dashboard')}>
+                <button
+                  className="status-pill warning status-pill-button"
+                  type="button"
+                  onClick={() => setPage("dashboard")}
+                >
                   <ArrowBackIcon fontSize="small" /> Back to Dashboard
                 </button>
               </div>
             </section>
-            
+
             <section className="dashboard">
               {activePersonalEditor ? (
-                <div className="modal-overlay" onClick={() => setActivePersonalEditor(null)}>
-                  <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                    
+                <div
+                  className="modal-overlay"
+                  onClick={() => setActivePersonalEditor(null)}
+                >
+                  <div
+                    className="modal-content"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <div className="modal-header">
                       <h3>
-                        {activePersonalEditor === 'contact'
-                          ? 'Edit Contact Information'
-                          : activePersonalEditor === 'demographic'
-                          ? 'Edit Demographic Data'
-                          : activePersonalEditor === 'emergency'
-                          ? 'Edit Emergency Contact'
-                          : activePersonalEditor === 'names'
-                          ? 'Edit Names'
-                          : activePersonalEditor === 'preference'
-                          ? 'Edit User Preference'
-                          : 'Edit Privacy Settings'}
+                        {activePersonalEditor === "contact"
+                          ? "Edit Contact Information"
+                          : activePersonalEditor === "demographic"
+                            ? "Edit Demographic Data"
+                            : activePersonalEditor === "emergency"
+                              ? "Edit Emergency Contact"
+                              : activePersonalEditor === "names"
+                                ? "Edit Names"
+                                : activePersonalEditor === "preference"
+                                  ? "Edit User Preference"
+                                  : "Edit Privacy Settings"}
                       </h3>
 
                       <button
@@ -1458,121 +1674,201 @@ function App() {
                     </div>
 
                     <p className="focus-hint">
-                      {activePersonalEditor === 'contact'
-                        ? 'Edit your contact information below, then save your changes.'
-                        : 'Update your information below, then save your changes.'}
+                      {activePersonalEditor === "contact"
+                        ? "Edit your contact information below, then save your changes."
+                        : "Update your information below, then save your changes."}
                     </p>
                     <div className="contact-edit-grid">
-                      {activePersonalEditor === 'contact' ? (
+                      {activePersonalEditor === "contact" ? (
                         <>
-                      <label className="contact-edit-field" htmlFor="contact-home-address">
-                        <span>Home Address</span>
-                        <input
-                          id="contact-home-address"
-                          type="text"
-                          value={contactEditForm.homeAddress}
-                          onChange={(event) => handleContactEditChange('homeAddress', event.target.value)}
-                        />
-                      </label>
+                          <label
+                            className="contact-edit-field"
+                            htmlFor="contact-home-address"
+                          >
+                            <span>Home Address</span>
+                            <input
+                              id="contact-home-address"
+                              type="text"
+                              value={contactEditForm.homeAddress}
+                              onChange={(event) =>
+                                handleContactEditChange(
+                                  "homeAddress",
+                                  event.target.value,
+                                )
+                              }
+                            />
+                          </label>
 
-                      <label className="contact-edit-field" htmlFor="contact-mailing-address">
-                        <span>Mailing Address</span>
-                        <input
-                          id="contact-mailing-address"
-                          type="text"
-                          value={contactEditForm.mailingAddress}
-                          onChange={(event) => handleContactEditChange('mailingAddress', event.target.value)}
-                        />
-                      </label>
+                          <label
+                            className="contact-edit-field"
+                            htmlFor="contact-mailing-address"
+                          >
+                            <span>Mailing Address</span>
+                            <input
+                              id="contact-mailing-address"
+                              type="text"
+                              value={contactEditForm.mailingAddress}
+                              onChange={(event) =>
+                                handleContactEditChange(
+                                  "mailingAddress",
+                                  event.target.value,
+                                )
+                              }
+                            />
+                          </label>
 
-                      <label className="contact-edit-field" htmlFor="contact-phone">
-                        <span>Preferred Phone</span>
-                        <input
-                          id="contact-phone"
-                          type="tel"
-                          value={contactEditForm.preferredPhone}
-                          onChange={(event) => handleContactEditChange('preferredPhone', event.target.value)}
-                        />
-                      </label>
+                          <label
+                            className="contact-edit-field"
+                            htmlFor="contact-phone"
+                          >
+                            <span>Preferred Phone</span>
+                            <input
+                              id="contact-phone"
+                              type="tel"
+                              value={contactEditForm.preferredPhone}
+                              onChange={(event) =>
+                                handleContactEditChange(
+                                  "preferredPhone",
+                                  event.target.value,
+                                )
+                              }
+                            />
+                          </label>
 
-                      <label className="contact-edit-field" htmlFor="contact-email">
-                        <span>Preferred Email</span>
-                        <input
-                          id="contact-email"
-                          type="email"
-                          value={contactEditForm.preferredEmail}
-                          onChange={(event) => handleContactEditChange('preferredEmail', event.target.value)}
-                        />
-                      </label>
+                          <label
+                            className="contact-edit-field"
+                            htmlFor="contact-email"
+                          >
+                            <span>Preferred Email</span>
+                            <input
+                              id="contact-email"
+                              type="email"
+                              value={contactEditForm.preferredEmail}
+                              onChange={(event) =>
+                                handleContactEditChange(
+                                  "preferredEmail",
+                                  event.target.value,
+                                )
+                              }
+                            />
+                          </label>
                         </>
                       ) : null}
 
-                      {activePersonalEditor === 'demographic' ? (
-                        <label className="contact-edit-field" htmlFor="contact-demographic-data">
+                      {activePersonalEditor === "demographic" ? (
+                        <label
+                          className="contact-edit-field"
+                          htmlFor="contact-demographic-data"
+                        >
                           <span>Demographic Data</span>
                           <input
                             id="contact-demographic-data"
                             type="text"
                             value={contactEditForm.demographicData}
-                            onChange={(event) => handleContactEditChange('demographicData', event.target.value)}
+                            onChange={(event) =>
+                              handleContactEditChange(
+                                "demographicData",
+                                event.target.value,
+                              )
+                            }
                           />
                         </label>
                       ) : null}
 
-                      {activePersonalEditor === 'emergency' ? (
-                        <label className="contact-edit-field" htmlFor="contact-emergency-contact">
+                      {activePersonalEditor === "emergency" ? (
+                        <label
+                          className="contact-edit-field"
+                          htmlFor="contact-emergency-contact"
+                        >
                           <span>Emergency Contact</span>
                           <input
                             id="contact-emergency-contact"
                             type="text"
                             value={contactEditForm.emergencyContact}
-                            onChange={(event) => handleContactEditChange('emergencyContact', event.target.value)}
+                            onChange={(event) =>
+                              handleContactEditChange(
+                                "emergencyContact",
+                                event.target.value,
+                              )
+                            }
                           />
                         </label>
                       ) : null}
 
-                      {activePersonalEditor === 'names' ? (
-                        <label className="contact-edit-field" htmlFor="contact-names">
+                      {activePersonalEditor === "names" ? (
+                        <label
+                          className="contact-edit-field"
+                          htmlFor="contact-names"
+                        >
                           <span>Names</span>
                           <input
                             id="contact-names"
                             type="text"
                             value={contactEditForm.names}
-                            onChange={(event) => handleContactEditChange('names', event.target.value)}
+                            onChange={(event) =>
+                              handleContactEditChange(
+                                "names",
+                                event.target.value,
+                              )
+                            }
                           />
                         </label>
                       ) : null}
 
-                      {activePersonalEditor === 'preference' ? (
-                        <label className="contact-edit-field" htmlFor="contact-user-preference">
+                      {activePersonalEditor === "preference" ? (
+                        <label
+                          className="contact-edit-field"
+                          htmlFor="contact-user-preference"
+                        >
                           <span>User Preference</span>
                           <input
                             id="contact-user-preference"
                             type="text"
                             value={contactEditForm.userPreference}
-                            onChange={(event) => handleContactEditChange('userPreference', event.target.value)}
+                            onChange={(event) =>
+                              handleContactEditChange(
+                                "userPreference",
+                                event.target.value,
+                              )
+                            }
                           />
                         </label>
                       ) : null}
 
-                      {activePersonalEditor === 'privacy' ? (
-                        <label className="contact-edit-field" htmlFor="contact-privacy-settings">
+                      {activePersonalEditor === "privacy" ? (
+                        <label
+                          className="contact-edit-field"
+                          htmlFor="contact-privacy-settings"
+                        >
                           <span>Privacy Settings</span>
                           <input
                             id="contact-privacy-settings"
                             type="text"
                             value={contactEditForm.privacySettings}
-                            onChange={(event) => handleContactEditChange('privacySettings', event.target.value)}
+                            onChange={(event) =>
+                              handleContactEditChange(
+                                "privacySettings",
+                                event.target.value,
+                              )
+                            }
                           />
                         </label>
                       ) : null}
                     </div>
 
                     <div className="contact-edit-actions">
-                      <button className="financial-aid-button" type="button" onClick={handleSaveContactInfo}>
+                      <button
+                        className="financial-aid-button"
+                        type="button"
+                        onClick={handleSaveContactInfo}
+                      >
                         Save Changes
                       </button>
-                      <button className="financial-aid-cancel-btn" type="button" onClick={() => setActivePersonalEditor(null)}>
+                      <button
+                        className="financial-aid-cancel-btn"
+                        type="button"
+                        onClick={() => setActivePersonalEditor(null)}
+                      >
                         Cancel
                       </button>
                     </div>
@@ -1589,122 +1885,164 @@ function App() {
                   <div className="info-display-section">
                     <h3 className="info-section-title">Contact Information</h3>
                     <div className="info-display-grid">
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <HomeIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <HomeIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">Home Address</p>
+                          <p className="info-value">
+                            {personalInfo.homeAddress}
+                          </p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">Home Address</p>
-                        <p className="info-value">{personalInfo.homeAddress}</p>
-                      </div>
-                    </div>
 
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <HomeIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <HomeIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">Mailing Address</p>
+                          <p className="info-value">
+                            {personalInfo.mailingAddress}
+                          </p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">Mailing Address</p>
-                        <p className="info-value">{personalInfo.mailingAddress}</p>
-                      </div>
-                    </div>
 
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <PhoneIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <PhoneIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">Preferred Phone</p>
+                          <p className="info-value">
+                            {personalInfo.preferredPhone}
+                          </p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">Preferred Phone</p>
-                        <p className="info-value">{personalInfo.preferredPhone}</p>
-                      </div>
-                    </div>
 
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <EmailIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <EmailIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">Preferred Email</p>
+                          <p className="info-value">
+                            {personalInfo.preferredEmail}
+                          </p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">Preferred Email</p>
-                        <p className="info-value">{personalInfo.preferredEmail}</p>
-                      </div>
-                    </div>
 
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <PersonIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <PersonIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">Names</p>
+                          <p className="info-value">{personalInfo.names}</p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">Names</p>
-                        <p className="info-value">{personalInfo.names}</p>
-                      </div>
-                    </div>
 
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <PersonIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <PersonIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">Demographic Data</p>
+                          <p className="info-value">
+                            {personalInfo.demographicData}
+                          </p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">Demographic Data</p>
-                        <p className="info-value">{personalInfo.demographicData}</p>
-                      </div>
-                    </div>
 
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <PhoneIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <PhoneIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">Emergency Contact</p>
+                          <p className="info-value">
+                            {personalInfo.emergencyContact}
+                          </p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">Emergency Contact</p>
-                        <p className="info-value">{personalInfo.emergencyContact}</p>
-                      </div>
-                    </div>
 
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <EditIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <EditIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">User Preference</p>
+                          <p className="info-value">
+                            {personalInfo.userPreference}
+                          </p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">User Preference</p>
-                        <p className="info-value">{personalInfo.userPreference}</p>
-                      </div>
-                    </div>
 
-                    <div className="info-item">
-                      <div className="info-icon">
-                        <EditIcon fontSize="small" />
+                      <div className="info-item">
+                        <div className="info-icon">
+                          <EditIcon fontSize="small" />
+                        </div>
+                        <div className="info-details">
+                          <p className="info-label">Privacy Settings</p>
+                          <p className="info-value">
+                            {personalInfo.privacySettings}
+                          </p>
+                        </div>
                       </div>
-                      <div className="info-details">
-                        <p className="info-label">Privacy Settings</p>
-                        <p className="info-value">{personalInfo.privacySettings}</p>
-                      </div>
-                    </div>
                     </div>
                   </div>
 
                   <div className="info-actions-section">
-                    <h3 className="info-section-title">Update Your Information</h3>
+                    <h3 className="info-section-title">
+                      Update Your Information
+                    </h3>
                     <div className="info-actions-grid">
-                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('contact')}>
+                      <button
+                        className="info-action-button"
+                        type="button"
+                        onClick={() => handleOpenContactEditor("contact")}
+                      >
                         <EditIcon fontSize="small" />
                         <span>Contact Information</span>
                       </button>
-                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('demographic')}>
+                      <button
+                        className="info-action-button"
+                        type="button"
+                        onClick={() => handleOpenContactEditor("demographic")}
+                      >
                         <EditIcon fontSize="small" />
                         <span>Demographic Data</span>
                       </button>
-                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('emergency')}>
+                      <button
+                        className="info-action-button"
+                        type="button"
+                        onClick={() => handleOpenContactEditor("emergency")}
+                      >
                         <EditIcon fontSize="small" />
                         <span>Emergency Contact</span>
                       </button>
-                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('names')}>
+                      <button
+                        className="info-action-button"
+                        type="button"
+                        onClick={() => handleOpenContactEditor("names")}
+                      >
                         <EditIcon fontSize="small" />
                         <span>Names</span>
                       </button>
-                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('preference')}>
+                      <button
+                        className="info-action-button"
+                        type="button"
+                        onClick={() => handleOpenContactEditor("preference")}
+                      >
                         <EditIcon fontSize="small" />
                         <span>User Preference</span>
                       </button>
-                      <button className="info-action-button" type="button" onClick={() => handleOpenContactEditor('privacy')}>
+                      <button
+                        className="info-action-button"
+                        type="button"
+                        onClick={() => handleOpenContactEditor("privacy")}
+                      >
                         <EditIcon fontSize="small" />
                         <span>Privacy Settings</span>
                       </button>
