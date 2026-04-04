@@ -973,6 +973,14 @@ function App() {
                         <p className="metric-value">Clear</p>
                       </div>
                     </div>
+                    <a
+                      className="finance-link"
+                      href="https://www.csulb.edu/financial-aid-and-scholarships/refunds"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      E-Refund Sign Up
+                    </a>
                     <button className="financial-aid-button" type="button" onClick={handleViewFinancialDetails}>
                       View Financial Details <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                     </button>
@@ -981,17 +989,6 @@ function App() {
                     </button>
                     <button className="financial-aid-button" type="button" onClick={handleMakePayment} disabled={!canMakePayment}>
                       Make a Payment <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
-                    </button>
-                    <button
-                      className="financial-aid-button"
-                      type="button"
-                      onClick={() => window.open(
-                        "https://www.csulb.edu/financial-aid-and-scholarships/refunds",
-                        "_blank"
-                      )}
-                    >
-                      E-Refund Sign Up
-                      <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
                     </button>
                     <button className="financial-aid-button" type="button">
                       View 1098-T <ArrowForwardIosIcon className="button-arrow" fontSize="inherit" />
