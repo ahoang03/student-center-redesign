@@ -11,22 +11,23 @@ React prototype for CECS 448 Project 2 (User-Centered Design), focused on improv
 
 ## Problem This Prototype Solves
 
-Primary usability issue addressed: information overload in student portals.
-
-Students often need only a subset of urgent information (next class, financial status, deadlines), but dashboard interfaces usually show everything at once. This increases cognitive load and slows task completion.
+Usability issues addressed with this design: 
+1. Visibility of core features
+2. Visibilty of certain statuses
+3. information overload in dashboard
 
 ## User-Centered Design Decisions
 
-The prototype applies user-centered design by prioritizing likely student goals first:
+The prototype also applies user-centered design by prioritizing likely student goals first:
 
-1. Check immediate status (holds, charges, urgent notices).
-2. Check upcoming classes.
-3. Complete a common action quickly (enroll, pay, view aid).
-4. Access support resources when needed.
+1. Checking immediate statuses (holds, charges, urgent notices)
+2. Checking upcoming enrollment dates
+3. Completing a common actions quickly (enroll, pay, view aid)
+4. Viewing final exam dates and term grades
 
 Implemented support for these goals:
 
-1. Essentials-first layout reduces non-critical content for quick scanning.
-2. Prioritized card accents visually separate high-level categories.
-3. Quick Action search supports recognition and faster retrieval.
-4. Status pills provide immediate, glanceable system feedback.
+1. Essentials-first layout reduces non-critical content for quick scanning
+2. Prioritized card accents visually separate high-level categories
+3. Quick Action search supports recognition and faster retrieval
+4. Status pills provide immediate, glanceable system feedback
